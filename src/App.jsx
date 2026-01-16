@@ -14,13 +14,26 @@ function App() {
     setError(null);
     setWeather(null);
 
+    const searchCity = city.trim().toLowerCase();
+
     try {
+      // encodeURIComponent για σωστή ανάγνωση ελληνικών χαρακτήρων
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&lang=el`
+        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(searchCity)}&appid=${API_KEY}&units=metric&lang=el`
       );
-      if (!response.ok) throw new Error("Δεν βρέθηκε η πόλη!");
-      const data = await response.json();
-      setWeather(data);
+      
+      if (!response.ok) {
+        // Δεύτερη προσπάθεια για άτονες λέξεις (πατρα, αθηνα κλπ)
+        const secondaryResponse = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(searchCity)}&appid=${API_KEY}&units=metric`
+        );
+        if (!secondaryResponse.ok) throw new Error("Δεν βρέθηκε η πόλη!");
+        const secondaryData = await secondaryResponse.json();
+        setWeather(secondaryData);
+      } else {
+        const data = await response.json();
+        setWeather(data);
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -28,67 +41,92 @@ function App() {
     }
   };
 
-  // ΟΡΙΣΤΙΚΑ ΣΤΥΛ ΓΙΑ ΝΑ ΜΗΝ ΚΟΛΛΑΕΙ ΣΤΙΣ ΑΚΡΕΣ (320px)
   const styles = {
     app: {
-      width: '100%',
+      width: '100vw',
       minHeight: '100vh',
-      backgroundColor: '#f0f2f5', // Γκρι φόντο για να σιγουρευτούμε ότι άλλαξε
-      padding: '40px 20px', // ΤΑ ΠΕΡΙΘΩΡΙΑ ΠΟΥ ΗΘΕΛΕΣ
+      backgroundColor: '#007bff', // Το μεγάλο μπλε background
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: '20px',
       boxSizing: 'border-box',
-      textAlign: 'center',
-      fontFamily: 'sans-serif'
+      fontFamily: 'sans-serif',
+      margin: 0
+    },
+    title: {
+      fontSize: '2.5rem',
+      color: 'white',
+      marginBottom: '20px',
+      textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
+      textAlign: 'center'
     },
     searchContainer: {
       display: 'flex',
       gap: '8px',
       width: '100%',
-      maxWidth: '350px',
-      margin: '0 auto 20px auto',
+      maxWidth: '400px',
       backgroundColor: 'white',
-      padding: '5px',
+      padding: '8px',
       borderRadius: '50px',
-      boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-      boxSizing: 'border-box'
+      boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+      marginBottom: '25px'
     },
     input: {
       flex: 1,
       border: 'none',
       outline: 'none',
-      padding: '10px 15px',
-      fontSize: '16px',
-      minWidth: '0', // SOS για να μικραίνει στα 320px
+      padding: '10px 20px',
+      fontSize: '18px',
       borderRadius: '50px'
     },
     button: {
-      backgroundColor: '#007bff',
+      backgroundColor: '#343a40',
       color: 'white',
       border: 'none',
-      padding: '10px 20px',
+      padding: '10px 25px',
       borderRadius: '50px',
       cursor: 'pointer',
-      whiteSpace: 'nowrap',
+      fontSize: '16px',
       fontWeight: 'bold'
     },
     card: {
-      marginTop: '30px',
       backgroundColor: 'white',
-      padding: '30px',
+      padding: '25px',
+      borderRadius: '25px',
+      boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+      width: '100%',
+      maxWidth: '220px',
+      textAlign: 'center',
+      marginTop: '10px'
+    },
+    // ΤΟ ΜΠΛΕ BACKGROUND ΣΤΟ ΕΙΚΟΝΙΔΙΟ ΠΟΥ ΖΗΤΗΣΕΣ
+    weatherIconBox: {
+      backgroundColor: '#007bff', // ΜΠΛΕ ΧΡΩΜΑ (ίδιο με το background της εφαρμογής)
       borderRadius: '20px',
-      boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-      maxWidth: '350px',
-      margin: '30px auto 0 auto'
+      display: 'inline-block',
+      padding: '12px',
+      marginBottom: '15px',
+      marginTop: '10px',
+      boxShadow: '0 4px 8px rgba(0,0,0,0.15)'
+    },
+    weatherIcon: {
+      width: '85px', 
+      height: '85px',
+      display: 'block',
+      filter: 'drop-shadow(0px 2px 4px rgba(0,0,0,0.2))'
     }
   };
 
   return (
     <div style={styles.app}>
-      <h1>🌤️ Weather App</h1>
+      <h1 style={styles.title}>☀️ Weather App</h1>
 
       <div style={styles.searchContainer}>
         <input
           type="text"
-          placeholder="Πόλη..."
+          placeholder="Πόλη (π.χ. Αθήνα)..."
           style={styles.input}
           value={city}
           onChange={(e) => setCity(e.target.value)}
@@ -99,18 +137,27 @@ function App() {
         </button>
       </div>
 
-      {loading && <p>Φόρτωση...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {loading && <p style={{color: 'white'}}>Φόρτωση...</p>}
+      {error && <p style={{ color: '#ffea00', fontWeight: 'bold' }}>⚠️ {error}</p>}
 
       {weather && (
         <div style={styles.card}>
-          <h2>{weather.name}</h2>
-          <p>{weather.weather[0].description}</p>
-          <h3 style={{ fontSize: '2rem' }}>{Math.round(weather.main.temp)}°C</h3>
-          <img 
-            src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} 
-            alt="icon" 
-          />
+          <h2 style={{ margin: '0', color: '#333', fontSize: '1.7rem' }}>{weather.name}</h2>
+          <p style={{ fontSize: '0.95rem', color: '#666', margin: '5px 0', textTransform: 'capitalize' }}>
+            {weather.weather[0].description}
+          </p>
+          
+          <div style={styles.weatherIconBox}>
+            <img 
+              src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} 
+              alt="weather icon"
+              style={styles.weatherIcon}
+            />
+          </div>
+
+          <div style={{ fontSize: '2.6rem', fontWeight: 'bold', color: '#333' }}>
+            {Math.round(weather.main.temp)}°C
+          </div>
         </div>
       )}
     </div>
