@@ -101,7 +101,7 @@ function App() {
       textAlign: 'center',
       marginTop: '10px'
     },
-    // ΤΟ ΜΠΛΕ BACKGROUND ΣΤΟ ΕΙΚΟΝΙΔΙΟ ΠΟΥ ΖΗΤΗΣΕΣ
+  
     weatherIconBox: {
       backgroundColor: '#007bff', // ΜΠΛΕ ΧΡΩΜΑ (ίδιο με το background της εφαρμογής)
       borderRadius: '20px',
