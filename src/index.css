@@ -21,7 +21,7 @@ html, body, #root {
   width: 100%;
   max-width: 450px;
   margin: 0 auto;
-  padding: 40px 20px; /* 40px πάνω-κάτω, 20px δεξιά-αριστερά για τον "αέρα" */
+  padding: 40px 20px; 
   box-sizing: border-box; /* Για να μην ξεχειλίζει η μπάρα */
   text-align: center;
 }
@@ -53,7 +53,7 @@ h1 {
 }
 
 .search button {
-  background-color: #007bff;
+  background-color: #333; 
   color: white;
   border: none;
   padding: 10px 20px;
@@ -61,12 +61,14 @@ h1 {
   cursor: pointer;
   white-space: nowrap;
   font-weight: bold;
+  
+  margin-left: 10px; 
+  transition: background-color 0.3s ease;
 }
 
 .search button:hover {
-  background-color: #0056b3;
+  background-color: #555; /* Αλλάζει ελαφρώς το χρώμα όταν πας το ποντίκι πάνω */
 }
-
 /* Η κάρτα του καιρού */
 .weather-card {
   margin-top: 30px;
