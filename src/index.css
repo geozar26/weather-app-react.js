@@ -1,16 +1,22 @@
-/* Καθαρίζουμε τα πάντα για να ακούει μόνο εσένα */
+/* index.css - Σβήσε τα πάντα και βάλε αυτά: */
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  background-color: #f0f2f5; /* Ένα ελαφρύ γκρι για να ξεχωρίζει η κάρτα */
-  color: #333;
-}
-
-body {
   margin: 0;
-  display: block; /* ΠΟΛΥ ΣΗΜΑΝΤΙΚΟ: Βγάζουμε το flex από εδώ */
-  width: 100%;
+  padding: 0;
 }
 
+html, body, #root {
+  margin: 0 ;
+  padding: 0 ;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  background-color: #007bff;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
 .app {
   width: 100%;
   max-width: 450px;
