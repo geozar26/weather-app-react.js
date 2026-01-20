@@ -31,38 +31,43 @@ h1 {
   margin-bottom: 20px;
 }
 
-/* Το container που περιέχει input και button */
+/* Το container πρέπει να έχει overflow hidden για να μην προεξέχει το κουμπί */
 .search {
   position: relative;
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 500px; 
+  max-width: 450px; 
   margin: 20px auto;
+  background: white;    /* Δίνουμε το λευκό χρώμα στο container */
+  border-radius: 50px;  /* Στρογγυλεύουμε το ίδιο το container */
+  overflow: hidden;     /* Κόβει το κουμπί αν πάει να προεξέχει */
 }
 
 .search input {
-  width: 100%;
-  padding: 15px 120px 15px 25px; /* Μεγάλο padding δεξιά για να μην πέφτει το κείμενο κάτω από το κουμπί */
-  border-radius: 50px;
+  flex: 1;
   border: none;
   outline: none;
+  padding: 15px 25px;
   font-size: 16px;
+  background: transparent; /* Το input είναι διάφανο για να φαίνεται το λευκό του container */
 }
 
 .search button {
-  position: absolute;
   background-color: #333;
   color: white;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 25px;
+  margin: 4px;          /* Μικρό κενό γύρω-γύρω για να φαίνεται "εσωτερικό" */
   border-radius: 50px;
   cursor: pointer;
   font-weight: bold;
-  height: calc(100% - 10px); /* Για να γεμίζει το ύψος αφήνοντας λίγο κενό */
+  white-space: nowrap;
+  transition: 0.3s;
 }
+
 .search button:hover {
-  background-color: #555; /* Αλλάζει ελαφρώς το χρώμα όταν πας το ποντίκι πάνω */
+  background-color: #000;
 }
 /* Η κάρτα του καιρού */
 .weather-card {
