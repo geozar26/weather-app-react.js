@@ -37,7 +37,7 @@ h1 {
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 500px; /* Ρύθμισέ το όσο θες */
+  max-width: 500px; 
   margin: 20px auto;
 }
 
@@ -52,7 +52,6 @@ h1 {
 
 .search button {
   position: absolute;
-  right: 5px; /* Απόσταση από τη δεξιά άκρη του input */
   background-color: #333;
   color: white;
   border: none;
