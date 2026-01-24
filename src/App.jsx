@@ -76,7 +76,7 @@ function App() {
     input: { flex: 1, border: 'none', outline: 'none', padding: '12px 15px', fontSize: '18px', borderRadius: '50px' },
     clearBtn: { 
       position: 'absolute', 
-      right: '135px', // ΑΠΟ 155px ΠΗΓΕ 135px ΓΙΑ ΝΑ ΕΙΝΑΙ ΛΙΓΟ ΠΙΟ ΑΡΙΣΤΕΡΑ
+      right: '130px', // ΤΕΛΕΙΑ ΑΠΟΣΤΑΣΗ ΓΙΑ ΙΣΟΡΡΟΠΙΑ
       top: '50%', 
       transform: 'translateY(-50%)',
       cursor: 'pointer', color: '#999', fontSize: '22px', display: city ? 'block' : 'none', 
