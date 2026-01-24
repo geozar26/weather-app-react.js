@@ -70,29 +70,39 @@ function App() {
     title: { fontSize: '2.6rem', color: 'white', marginBottom: '25px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '12px' },
     searchContainer: { 
       display: 'flex', alignItems: 'center', gap: '8px', width: '90%', maxWidth: '420px', 
-      backgroundColor: 'white', padding: '8px 10px', borderRadius: '50px', 
+      backgroundColor: 'white', padding: '6px 8px', borderRadius: '50px', 
       boxShadow: '0 10px 25px rgba(0,0,0,0.1)', position: 'relative', zIndex: 100 
     },
-    input: { flex: 1, border: 'none', outline: 'none', padding: '10px 45px 10px 15px', fontSize: '18px', borderRadius: '50px' },
+    input: { flex: 1, border: 'none', outline: 'none', padding: '12px 15px', fontSize: '18px', borderRadius: '50px' },
     clearBtn: { 
-      position: 'absolute', right: '165px', top: '50.5%', 
-      transform: isXHovered ? 'translateY(-50%) scale(1.15)' : 'translateY(-50%) scale(1)', 
-      cursor: 'pointer', color: '#999', fontSize: '24px', display: city ? 'block' : 'none', 
+      position: 'absolute', right: '155px', top: '50%', 
+      transform: 'translateY(-50%)',
+      cursor: 'pointer', color: '#999', fontSize: '22px', display: city ? 'block' : 'none', 
       zIndex: 10, transition: 'all 0.2s ease', userSelect: 'none'
     },
-    button: { backgroundColor: '#1a1a1a', color: 'white', border: 'none', padding: '12px 25px', borderRadius: '50px', cursor: 'pointer', fontSize: '16px', fontWeight: '600', minWidth: '120px' },
+    button: { 
+      backgroundColor: '#1a1a1a', color: 'white', border: 'none', 
+      padding: '12px 20px', borderRadius: '50px', cursor: 'pointer', 
+      fontSize: '15px', fontWeight: '600', minWidth: '110px',
+      display: 'flex', justifyContent: 'center', alignItems: 'center' 
+    },
     card: { 
-      backgroundColor: 'white', padding: '35px 25px 25px 25px', borderRadius: '40px', boxShadow: '0 20px 45px rgba(0,0,0,0.2)', 
-      width: '85%', maxWidth: '280px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', 
-      marginTop: '15px', position: 'relative'
+      backgroundColor: 'white', padding: '30px 20px 20px 20px', borderRadius: '40px', 
+      boxShadow: '0 20px 45px rgba(0,0,0,0.2)', width: '85%', maxWidth: '280px', 
+      textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', 
+      marginTop: '-15px', position: 'relative' 
     },
     closeCardBtn: {
-      position: 'absolute', top: '15px', right: '20px', fontSize: '24px', cursor: 'pointer',
+      position: 'absolute', 
+      top: '12px',      
+      right: '18px',    
+      fontSize: '22px', 
+      cursor: 'pointer',
       transition: 'all 0.2s ease', fontWeight: 'bold', lineHeight: '1',
       color: isCloseCardHovered ? '#ff4757' : '#1a1a1a'
     },
-    animatedIcon: { width: '130px', height: '130px', margin: '10px 0', objectFit: 'contain' },
-    temp: { fontSize: '3.8rem', fontWeight: '900', color: '#1a1a1a', margin: '5px 0' },
+    animatedIcon: { width: '120px', height: '120px', margin: '5px 0', objectFit: 'contain' },
+    temp: { fontSize: '3.5rem', fontWeight: '900', color: '#1a1a1a', margin: '5px 0' },
     autocomplete: { 
       position: 'absolute', top: '110%', left: '0', right: '0', backgroundColor: 'white', 
       borderRadius: '25px', boxShadow: '0 15px 35px rgba(0,0,0,0.2)', zIndex: 150, listStyle: 'none', padding: '10px 0',
@@ -134,23 +144,9 @@ function App() {
         )}
       </div>
 
-      <div style={{
-        height: '75px', 
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%'
-      }}>
+      <div style={{ height: '65px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {showToast.show && (
-          <div style={{
-            backgroundColor: 'rgba(0,0,0,0.75)',
-            color: 'white',
-            padding: '10px 25px',
-            borderRadius: '50px',
-            fontSize: '14px',
-            fontWeight: '600',
-            marginTop: '10px'
-          }}>
+          <div style={{ backgroundColor: 'rgba(0,0,0,0.75)', color: 'white', padding: '10px 25px', borderRadius: '50px', fontSize: '14px', fontWeight: '600' }}>
             {showToast.message}
           </div>
         )}
