@@ -75,7 +75,9 @@ function App() {
     },
     input: { flex: 1, border: 'none', outline: 'none', padding: '12px 15px', fontSize: '18px', borderRadius: '50px' },
     clearBtn: { 
-      position: 'absolute', right: '155px', top: '50%', 
+      position: 'absolute', 
+      right: '135px', // ΑΠΟ 155px ΠΗΓΕ 135px ΓΙΑ ΝΑ ΕΙΝΑΙ ΛΙΓΟ ΠΙΟ ΑΡΙΣΤΕΡΑ
+      top: '50%', 
       transform: 'translateY(-50%)',
       cursor: 'pointer', color: '#999', fontSize: '22px', display: city ? 'block' : 'none', 
       zIndex: 10, transition: 'all 0.2s ease', userSelect: 'none'
@@ -87,19 +89,19 @@ function App() {
       display: 'flex', justifyContent: 'center', alignItems: 'center' 
     },
     card: { 
-      backgroundColor: 'white', padding: '30px 20px 20px 20px', borderRadius: '40px', 
+      backgroundColor: 'white', padding: '35px 20px 20px 20px', borderRadius: '40px', 
       boxShadow: '0 20px 45px rgba(0,0,0,0.2)', width: '85%', maxWidth: '280px', 
       textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', 
       marginTop: '-15px', position: 'relative' 
     },
     closeCardBtn: {
       position: 'absolute', 
-      top: '12px',      
-      right: '18px',    
-      fontSize: '22px', 
+      top: '18px',      
+      right: '20px',    
+      fontSize: '24px', 
       cursor: 'pointer',
       transition: 'all 0.2s ease', fontWeight: 'bold', lineHeight: '1',
-      color: isCloseCardHovered ? '#ff4757' : '#1a1a1a'
+      color: isCloseCardHovered ? '#007bff' : '#1a1a1a' 
     },
     animatedIcon: { width: '120px', height: '120px', margin: '5px 0', objectFit: 'contain' },
     temp: { fontSize: '3.5rem', fontWeight: '900', color: '#1a1a1a', margin: '5px 0' },
