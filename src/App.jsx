@@ -1,180 +1,151 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 
 function App() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [forecast, setForecast] = useState([]);
+  const [history, setHistory] = useState(["Πάτρα", "Αθήνα", "Θεσσαλονίκη"]);
   const [suggestions, setSuggestions] = useState([]);
-  const [showToast, setShowToast] = useState({ show: false, message: "" });
-  const [isXHovered, setIsXHovered] = useState(false);
-  const [isCloseCardHovered, setIsCloseCardHovered] = useState(false);
-  const [history, setHistory] = useState([]); 
 
   const API_KEY = "8e870e1f59cadca07199db1d225e0dec";
 
+  useEffect(() => {
+    getWeather("Πάτρα");
+    document.body.style.margin = "0";
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+  }, []);
+
   const getWeather = async (cityName = city) => {
     if (!cityName) return;
-    setLoading(true);
-    setWeather(null);
     setSuggestions([]);
-
     try {
-      const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cityName)}&appid=${API_KEY}&units=metric&lang=el`
-      );
-      if (!response.ok) throw new Error();
+      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cityName)}&appid=${API_KEY}&units=metric&lang=el`);
+      const fResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(cityName)}&appid=${API_KEY}&units=metric&lang=el`);
       const data = await response.json();
+      const fData = await fResponse.json();
       setWeather(data);
-      
-      if (!history.includes(data.name)) {
-        setHistory(prev => [data.name, ...prev]);
-      }
-    } catch (err) {
-      triggerToast("Η πόλη δεν βρέθηκε!");
-    } finally {
-      setLoading(false);
-    }
+      setForecast(fData.list.filter(item => item.dt_txt.includes("12:00:00")).slice(0, 5));
+      setHistory(prev => [data.name, ...prev.filter(h => h !== data.name)].slice(0, 5));
+      setCity("");
+    } catch (err) { alert("Σφάλμα!"); }
   };
 
-  const handleInputChange = (e) => {
-    const value = e.target.value;
-    setCity(value);
-    if (value.length > 0) {
-      const filtered = history.filter(item => 
-        item.toLowerCase().startsWith(value.toLowerCase())
-      );
-      setSuggestions(filtered);
-    } else {
-      setSuggestions([]);
-    }
-  };
-
-  const removeFromHistory = (e, cityToRemove) => {
-    e.stopPropagation();
-    e.preventDefault();
-    setHistory(prev => prev.filter(c => c !== cityToRemove));
-    setSuggestions(prev => prev.filter(c => c !== cityToRemove));
-  };
-
-  const triggerToast = (msg) => {
-    setShowToast({ show: true, message: msg });
-    setTimeout(() => setShowToast({ show: false, message: "" }), 3000);
-  };
-
-  const styles = {
-    app: { 
-      width: '100vw', height: '100vh', backgroundColor: '#007bff', 
-      display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', 
-      fontFamily: 'sans-serif', margin: 0, padding: 0, overflow: 'hidden', position: 'fixed', top: 0, left: 0
-    },
-    title: { fontSize: '2.6rem', color: 'white', marginBottom: '25px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '12px' },
-    searchContainer: { 
-      display: 'flex', alignItems: 'center', gap: '8px', width: '90%', maxWidth: '420px', 
-      backgroundColor: 'white', padding: '6px 8px', borderRadius: '50px', 
-      boxShadow: '0 10px 25px rgba(0,0,0,0.1)', position: 'relative', zIndex: 100 
-    },
-    input: { flex: 1, border: 'none', outline: 'none', padding: '12px 15px', fontSize: '18px', borderRadius: '50px' },
-    clearBtn: { 
-      position: 'absolute', 
-      right: '130px', // ΤΕΛΕΙΑ ΑΠΟΣΤΑΣΗ ΓΙΑ ΙΣΟΡΡΟΠΙΑ
-      top: '50%', 
-      transform: 'translateY(-50%)',
-      cursor: 'pointer', color: '#999', fontSize: '22px', display: city ? 'block' : 'none', 
-      zIndex: 10, transition: 'all 0.2s ease', userSelect: 'none'
-    },
-    button: { 
-      backgroundColor: '#1a1a1a', color: 'white', border: 'none', 
-      padding: '12px 20px', borderRadius: '50px', cursor: 'pointer', 
-      fontSize: '15px', fontWeight: '600', minWidth: '110px',
-      display: 'flex', justifyContent: 'center', alignItems: 'center' 
-    },
-    card: { 
-      backgroundColor: 'white', padding: '35px 20px 20px 20px', borderRadius: '40px', 
-      boxShadow: '0 20px 45px rgba(0,0,0,0.2)', width: '85%', maxWidth: '280px', 
-      textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', 
-      marginTop: '-15px', position: 'relative' 
-    },
-    closeCardBtn: {
-      position: 'absolute', 
-      top: '18px',      
-      right: '20px',    
-      fontSize: '24px', 
-      cursor: 'pointer',
-      transition: 'all 0.2s ease', fontWeight: 'bold', lineHeight: '1',
-      color: isCloseCardHovered ? '#007bff' : '#1a1a1a' 
-    },
-    animatedIcon: { width: '120px', height: '120px', margin: '5px 0', objectFit: 'contain' },
-    temp: { fontSize: '3.5rem', fontWeight: '900', color: '#1a1a1a', margin: '5px 0' },
-    autocomplete: { 
-      position: 'absolute', top: '110%', left: '0', right: '0', backgroundColor: 'white', 
-      borderRadius: '25px', boxShadow: '0 15px 35px rgba(0,0,0,0.2)', zIndex: 150, listStyle: 'none', padding: '10px 0',
-      maxHeight: '200px', overflowY: 'auto'
+  const getBackground = () => {
+    if (!weather) return "#0f172a";
+    const main = weather.weather[0].main;
+    switch (main) {
+      case "Clear": return "linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%)";
+      case "Clouds": return "linear-gradient(to bottom, #1e293b, #334155)";
+      case "Rain": return "linear-gradient(to bottom, #203a43, #2c5364)";
+      default: return "#0f172a";
     }
   };
 
   return (
-    <div style={styles.app}>
-      <h1 style={styles.title}><span>☀️</span> Weather App</h1>
+    <div style={{
+      height: '100vh', width: '100vw', background: getBackground(),
+      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+      padding: '15px', boxSizing: 'border-box', color: 'white', position: 'relative', overflow: 'hidden'
+    }}>
 
-      <div style={styles.searchContainer}>
-        <input
-          type="text" style={styles.input} placeholder="Αναζήτηση..."
-          value={city} onChange={handleInputChange}
-          onKeyDown={(e) => e.key === "Enter" && getWeather()}
-        />
-        <span 
-          style={styles.clearBtn} 
-          onClick={() => {setCity(""); setSuggestions([]);}}
-          onMouseEnter={() => setIsXHovered(true)}
-          onMouseLeave={() => setIsXHovered(false)}
-        >
-          &times;
-        </span>
-        <button style={styles.button} onClick={() => getWeather()}>Αναζήτηση</button>
+      {/* RAIN EFFECT */}
+      {weather?.weather[0].main === "Rain" && (
+        <div className="rain-container">
+          {[...Array(25)].map((_, i) => <div key={i} className="drop"></div>)}
+        </div>
+      )}
 
-        {suggestions.length > 0 && (
-          <ul style={styles.autocomplete}>
-            {suggestions.map((s, i) => (
-              <li key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 25px', cursor: 'pointer', borderBottom: '1px solid #f0f0f0' }} 
-                  onClick={() => { setCity(s); getWeather(s); }}>
-                <span style={{fontSize: '16px', color: '#333'}}>{s}</span>
-                <span style={{color: '#ff4757', fontWeight: 'bold', fontSize: '22px', padding: '0 10px'}} 
-                      onClick={(e) => removeFromHistory(e, s)}>&times;</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      <style>{`
+        .main-wrapper { 
+          display: flex; 
+          flex-direction: column; 
+          align-items: center; 
+          width: 100%; 
+          max-width: 650px; 
+          z-index: 2;
+          gap: min(2.5vh, 22px); 
+        }
 
-      <div style={{ height: '65px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        {showToast.show && (
-          <div style={{ backgroundColor: 'rgba(0,0,0,0.75)', color: 'white', padding: '10px 25px', borderRadius: '50px', fontSize: '14px', fontWeight: '600' }}>
-            {showToast.message}
-          </div>
-        )}
-        {loading && <p style={{color: 'white', fontWeight: 'bold'}}>Φόρτωση...</p>}
-      </div>
+        .city-title { font-size: clamp(2.5rem, 7vh, 3.5rem); font-weight: 700; margin: 0; }
+        .temp-display { font-size: clamp(4.5rem, 14vh, 7rem); font-weight: 300; line-height: 1; margin: 0; }
+        .desc-label { font-size: 1.8rem; font-weight: 400; text-transform: capitalize; margin: 0; }
+        
+        .search-area { width: 100%; max-width: 460px; position: relative; }
+        .forecast-row { display: flex; gap: 10px; width: 100%; justify-content: center; }
+
+        .rain-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        .drop { position: absolute; width: 2px; height: 15px; background: rgba(255,255,255,0.3); bottom: 100%; animation: fall 0.8s linear infinite; }
+        @keyframes fall { to { transform: translateY(100vh); } }
+        ${[...Array(25)].map((_, i) => `.drop:nth-child(${i+1}) { left: ${Math.random() * 100}%; animation-delay: ${Math.random() * 2}s; }`).join('')}
+
+        @media (max-width: 500px) {
+          .desc-label { font-size: 1.4rem; }
+          .forecast-row { display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+          .main-wrapper { gap: 1.5vh; }
+        }
+      `}</style>
 
       {weather && (
-        <div style={styles.card}>
-          <span 
-            style={styles.closeCardBtn} 
-            onClick={() => setWeather(null)}
-            onMouseEnter={() => setIsCloseCardHovered(true)}
-            onMouseLeave={() => setIsCloseCardHovered(false)}
-          >
-            &times;
-          </span>
-          <h2 style={{fontSize: '1.8rem', margin: 0, fontWeight: '700'}}>{weather.name}</h2>
-          
-          <img 
-            src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@4x.png`} 
-            alt="weather" 
-            style={styles.animatedIcon}
-          />
+        <div className="main-wrapper">
+          <h1 className="city-title">{weather.name}</h1>
+          <div className="temp-display">{Math.round(weather.main.temp)}°</div>
+          <div className="desc-label">{weather.weather[0].description}</div>
 
-          <div style={{color: '#666', textTransform: 'capitalize', fontSize: '1.1rem'}}>{weather.weather[0].description}</div>
-          <div style={styles.temp}>{Math.round(weather.main.temp)}°C</div>
+          <div className="search-area">
+            <div style={{ background: 'white', borderRadius: '50px', padding: '4px', display: 'flex', alignItems: 'center', boxShadow: '0 8px 20px rgba(0,0,0,0.15)' }}>
+              <input
+                type="text" placeholder="Αναζήτηση..." value={city}
+                onChange={(e) => {
+                  setCity(e.target.value);
+                  setSuggestions(e.target.value ? history.filter(h => h.toLowerCase().startsWith(e.target.value.toLowerCase())) : []);
+                }}
+                onKeyDown={(e) => e.key === "Enter" && getWeather()}
+                style={{ flex: 1, border: 'none', outline: 'none', padding: '12px 20px', color: '#333', borderRadius: '50px', fontSize: '16px' }}
+              />
+              {city && <span onClick={() => setCity("")} style={{ color: '#999', cursor: 'pointer', marginRight: '10px', fontSize: '20px', fontWeight: 'bold' }}>&times;</span>}
+              <button onClick={() => getWeather()} style={{ background: '#000', color: 'white', border: 'none', padding: '10px 24px', borderRadius: '50px', cursor: 'pointer', fontWeight: 'bold' }}>Αναζήτηση</button>
+            </div>
+
+            {/* SUGGESTIONS DROPDOWN ΜΕ ΤΟ ΔΙΟΡΘΩΜΕΝΟ X */}
+            {suggestions.length > 0 && (
+              <div style={{ position: 'absolute', top: '110%', left: 0, right: 0, background: 'white', borderRadius: '15px', color: '#333', overflow: 'hidden', zIndex: 100, boxShadow: '0 10px 25px rgba(0,0,0,0.2)' }}>
+                {suggestions.map((s, i) => (
+                  <div key={i} onClick={() => getWeather(s)} style={{ padding: '12px 20px', borderBottom: '1px solid #eee', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    {s} 
+                    <span 
+                      onClick={(e) => {
+                        e.stopPropagation(); // Σταματάει το κλικ για να μην κάνει αναζήτηση
+                        const newHistory = history.filter(h => h !== s);
+                        setHistory(newHistory);
+                        setSuggestions(newHistory.filter(h => h.toLowerCase().startsWith(city.toLowerCase())));
+                      }} 
+                      style={{ color: '#ff4757', fontWeight: 'bold', fontSize: '22px', padding: '0 10px', cursor: 'pointer' }}
+                    >
+                      &times;
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="forecast-row">
+            {forecast.map((f, i) => (
+              <div key={i} style={{ background: 'rgba(255,255,255,0.12)', padding: '12px', borderRadius: '18px', textAlign: 'center', minWidth: '70px', backdropFilter: 'blur(5px)' }}>
+                <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>{new Date(f.dt_txt).toLocaleDateString('el-GR', {weekday: 'short'})}</div>
+                <img src={`https://openweathermap.org/img/wn/${f.weather[0].icon}.png`} width="30" alt="icon" />
+                <div style={{ fontWeight: '700' }}>{Math.round(f.main.temp)}°</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ display: 'flex', gap: '40px', borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '15px' }}>
+            <div style={{textAlign:'center'}}><small style={{opacity:0.6, fontSize:'0.7rem'}}>ΑΙΣΘΗΣΗ</small><div style={{fontSize:'1.2rem', fontWeight:'600'}}>{Math.round(weather.main.feels_like)}°</div></div>
+            <div style={{textAlign:'center'}}><small style={{opacity:0.6, fontSize:'0.7rem'}}>ΥΓΡΑΣΙΑ</small><div style={{fontSize:'1.2rem', fontWeight:'600'}}>{weather.main.humidity}%</div></div>
+            <div style={{textAlign:'center'}}><small style={{opacity:0.6, fontSize:'0.7rem'}}>ΑΝΕΜΟΣ</small><div style={{fontSize:'1.2rem', fontWeight:'600'}}>{weather.wind.speed}m/s</div></div>
+          </div>
         </div>
       )}
     </div>
