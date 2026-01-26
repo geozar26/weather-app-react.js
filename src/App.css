@@ -1,20 +1,18 @@
-/* Ρυθμίσεις για να γεμίσει η οθόνη */
+/* Καθαρίζουμε όλα τα defaults που δημιουργούν κενά */
 html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
+  overflow: hidden; /* Εμποδίζει το scroll */
+  background-color: #0f172a; /* Ένα βασικό σκούρο χρώμα για να μην αναβοσβήνει άσπρο */
 }
 
 #root {
   margin: 0;
   padding: 0;
   width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Αυτό κεντράρει το περιεχόμενο οριζόντια */
-  text-align: center;
+  height: 100%;
 }
 
 * {
