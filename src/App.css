@@ -5,7 +5,7 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden; /* Εμποδίζει το scroll */
-  background-color: #0f172a; /* Ένα βασικό σκούρο χρώμα για να μην αναβοσβήνει άσπρο */
+
 }
 
 #root {
