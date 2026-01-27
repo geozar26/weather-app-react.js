@@ -5,7 +5,6 @@ function App() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
-  // 1. Ξεκινάμε το state με ό,τι υπάρχει αποθηκευμένο, αλλιώς βάζουμε την Πάτρα
   const [history, setHistory] = useState(() => {
     const saved = localStorage.getItem("weatherHistory");
     return saved ? JSON.parse(saved) : ["Πάτρα"];
@@ -14,16 +13,24 @@ function App() {
 
   const API_KEY = "8e870e1f59cadca07199db1d225e0dec";
 
+  // 1. Αλλαγή background σε όλο το body όταν αλλάζει ο καιρός
+  useEffect(() => {
+    if (weather) {
+      document.body.style.background = getBackground();
+      document.body.style.transition = "background 0.5s ease"; // Γλυκιά εναλλαγή
+    }
+  }, [weather]);
+
   useEffect(() => {
     getWeather(history[0] || "Πάτρα");
     
+    // Reset styles
     document.body.style.margin = "0";
     document.body.style.padding = "0";
     document.body.style.overflow = "hidden";
     document.documentElement.style.height = "100%";
   }, []);
 
-  // 2. Κάθε φορά που αλλάζει το history, το σώζουμε στο LocalStorage
   useEffect(() => {
     localStorage.setItem("weatherHistory", JSON.stringify(history));
   }, [history]);
@@ -40,37 +47,51 @@ function App() {
       setWeather(data);
       setForecast(fData.list.filter(item => item.dt_txt.includes("12:00:00")).slice(0, 5));
       
-      // 3. Ενημέρωση ιστορικού: Βάζουμε τη νέα πόλη πρώτη και κρατάμε τις υπόλοιπες
       setHistory(prev => {
         const filtered = prev.filter(h => h.toLowerCase() !== data.name.toLowerCase());
-        return [data.name, ...filtered].slice(0, 5); // Κρατάμε τις 5 τελευταίες
+        return [data.name, ...filtered].slice(0, 5);
       });
       
       setCity("");
     } catch (err) { alert("Σφάλμα!"); }
   };
 
+  // 2. Το βελτιωμένο getBackground με IDs
   const getBackground = () => {
     if (!weather) return "#0f172a";
-    const main = weather.weather[0].main;
-    switch (main) {
-      case "Clear": return "linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%)";
-      case "Clouds": return "linear-gradient(to bottom, #1e293b, #334155)";
-      case "Rain": return "linear-gradient(to bottom, #203a43, #2c5364)";
-      default: return "#0f172a";
+    const id = weather.weather[0].id;
+
+    switch (true) {
+      case (id === 800): // Καθαρός ουρανός
+        return "linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%)";
+      
+      case (id === 801 || id === 802): // Λίγα σύννεφα (πιο ανοιχτό χρώμα)
+        return "linear-gradient(to bottom, #74b9ff, #81ecec)";
+      
+      case (id === 803 || id === 804): // Βαριά συννεφιά
+        return "linear-gradient(to bottom, #2c3e50, #4ca1af)";
+      
+      case (id >= 500 && id <= 531): // Βροχή
+        return "linear-gradient(to bottom, #203a43, #2c5364)";
+      
+      case (id >= 200 && id <= 232): // Καταιγίδα
+        return "linear-gradient(to bottom, #0f2027, #2c5364)";
+        
+      default:
+        return "#0f172a";
     }
   };
 
   return (
     <div style={{
-      height: '100vh', width: '100vw', background: getBackground(),
+      height: '100vh', width: '100vw',
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       padding: '15px', boxSizing: 'border-box', color: 'white', position: 'fixed', top: 0, left: 0, overflow: 'hidden'
     }}>
 
       <style>{`
         .main-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 650px; z-index: 2; gap: min(2.5vh, 22px); }
-        .city-title { font-size: clamp(2.5rem, 7vh, 3.5rem); font-weight: 700; margin: 0; }
+        .city-title { font-size: clamp(2.5rem, 7vh, 3.5rem); font-weight: 700; margin: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .temp-display { font-size: clamp(4.5rem, 14vh, 7rem); font-weight: 300; line-height: 1; margin: 0; }
         .desc-label { font-size: 1.8rem; font-weight: 400; text-transform: capitalize; margin: 0; }
         .search-area { width: 100%; max-width: 460px; position: relative; }
@@ -125,18 +146,18 @@ function App() {
 
           <div className="forecast-row">
             {forecast.map((f, i) => (
-              <div key={i} style={{ background: 'rgba(255,255,255,0.12)', padding: '12px', borderRadius: '18px', textAlign: 'center', minWidth: '70px', backdropFilter: 'blur(5px)' }}>
-                <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>{new Date(f.dt_txt).toLocaleDateString('el-GR', {weekday: 'short'})}</div>
-                <img src={`https://openweathermap.org/img/wn/${f.weather[0].icon}.png`} width="30" alt="icon" />
+              <div key={i} style={{ background: 'rgba(255,255,255,0.15)', padding: '12px', borderRadius: '18px', textAlign: 'center', minWidth: '70px', backdropFilter: 'blur(10px)' }}>
+                <div style={{ fontSize: '0.75rem', opacity: 0.8 }}>{new Date(f.dt_txt).toLocaleDateString('el-GR', {weekday: 'short'})}</div>
+                <img src={`https://openweathermap.org/img/wn/${f.weather[0].icon}.png`} width="35" alt="icon" />
                 <div style={{ fontWeight: '700' }}>{Math.round(f.main.temp)}°</div>
               </div>
             ))}
           </div>
 
           <div style={{ display: 'flex', gap: '40px', borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: '15px' }}>
-            <div style={{textAlign:'center'}}><small style={{opacity:0.6, fontSize:'0.7rem'}}>ΑΙΣΘΗΣΗ</small><div style={{fontSize:'1.2rem', fontWeight:'600'}}>{Math.round(weather.main.feels_like)}°</div></div>
-            <div style={{textAlign:'center'}}><small style={{opacity:0.6, fontSize:'0.7rem'}}>ΥΓΡΑΣΙΑ</small><div style={{fontSize:'1.2rem', fontWeight:'600'}}>{weather.main.humidity}%</div></div>
-            <div style={{textAlign:'center'}}><small style={{opacity:0.6, fontSize:'0.7rem'}}>ΑΝΕΜΟΣ</small><div style={{fontSize:'1.2rem', fontWeight:'600'}}>{weather.wind.speed}m/s</div></div>
+            <div style={{textAlign:'center'}}><small style={{opacity:0.7, fontSize:'0.7rem'}}>ΑΙΣΘΗΣΗ</small><div style={{fontSize:'1.2rem', fontWeight:'600'}}>{Math.round(weather.main.feels_like)}°</div></div>
+            <div style={{textAlign:'center'}}><small style={{opacity:0.7, fontSize:'0.7rem'}}>ΥΓΡΑΣΙΑ</small><div style={{fontSize:'1.2rem', fontWeight:'600'}}>{weather.main.humidity}%</div></div>
+            <div style={{textAlign:'center'}}><small style={{opacity:0.7, fontSize:'0.7rem'}}>ΑΝΕΜΟΣ</small><div style={{fontSize:'1.2rem', fontWeight:'600'}}>{weather.wind.speed}m/s</div></div>
           </div>
         </div>
       )}
