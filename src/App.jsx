@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 
 function App() {
@@ -51,16 +50,22 @@ function App() {
     getWeather(history[0] || "Πάτρα");
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("weatherHistory", JSON.stringify(history));
-  }, [history]);
-
   return (
     <div style={{ 
-      minHeight: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', 
-      alignItems: 'center', color: 'white', padding: '40px 15px', boxSizing: 'border-box',
-      background: getBackground(), transition: '1s ease', justifyContent: 'flex-start',
-      overflowY: 'auto'
+      // ΔΙΟΡΘΩΣΗ: Επιτρέπουμε το scroll και αφαιρούμε το fixed
+      minHeight: '100vh', 
+      width: '100vw', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      color: 'white', 
+      padding: '50px 15px 80px 15px', // Αυξημένο padding κάτω (80px) για να μην κόβονται τα details
+      boxSizing: 'border-box',
+      background: getBackground(), 
+      transition: '1s ease', 
+      justifyContent: 'flex-start',
+      overflowX: 'hidden',
+      overflowY: 'auto' 
     }}>
       
       <style>
@@ -105,10 +110,10 @@ function App() {
       </style>
 
       {weather && (
-        <div style={{ textAlign: 'center', width: '100%', maxWidth: '480px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+        <div style={{ textAlign: 'center', width: '100%', maxWidth: '480px', display: 'flex', flexDirection: 'column', gap: '25px' }}>
           
-          {/* Main Info - Με περιθώριο πάνω */}
-          <div style={{ marginBottom: '5px' }}>
+          {/* Main Info */}
+          <div>
             <div style={{ fontSize: '1.2rem', fontWeight: '800', opacity: 0.9 }}>
               {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
             </div>
@@ -146,8 +151,8 @@ function App() {
             ))}
           </div>
 
-          {/* Detail Grid - Με περιθώριο κάτω */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%', marginBottom: '30px' }}>
+          {/* Detail Grid - Εδώ προστέθηκε έξτρα margin bottom */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%', marginBottom: '20px' }}>
             <DetailTile label="ΑΙΣΘΗΣΗ" icon="thermostat" value={`${Math.round(weather.main.feels_like)}°`} />
             <DetailTile label="ΥΓΡΑΣΙΑ" icon="water_drop" value={`${weather.main.humidity}%`} />
             <DetailTile label="ΑΝΕΜΟΣ" icon="air" value={`${weather.wind.speed}m/s`} />
