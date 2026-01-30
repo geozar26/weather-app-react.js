@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 
 function App() {
@@ -58,12 +57,12 @@ function App() {
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 
+      justifyContent: 'center', // ΑΥΤΟ ΤΟ ΚΑΤΕΒΑΖΕΙ ΣΤΗ ΜΕΣΗ ΚΑΤΑΚΟΡΥΦΑ
       color: 'white', 
-      padding: '30px 12px 100px 12px', 
+      padding: '20px 12px', 
       boxSizing: 'border-box',
       background: getBackground(), 
       transition: '1s ease', 
-      justifyContent: 'flex-start',
       overflowX: 'hidden'
     }}>
       
@@ -109,7 +108,6 @@ function App() {
       {weather && (
         <div style={{ textAlign: 'center', width: '100%', maxWidth: '450px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          {/* Header Section */}
           <div>
             <div style={{ fontSize: '1.1rem', fontWeight: '700', opacity: 0.85 }}>
               {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
@@ -126,7 +124,6 @@ function App() {
             </div>
           </div>
 
-          {/* Search Section */}
           <div style={{ position: 'relative', width: '100%', zIndex: 100 }}>
             <div className="search-wrapper">
               <input className="search-input" type="text" placeholder="Αναζήτηση πόλης..." value={city} 
@@ -136,7 +133,6 @@ function App() {
             </div>
           </div>
 
-          {/* Forecast Tiles - Μικρότερα και μαζεμένα */}
           <div style={{ display: 'flex', gap: '6px', width: '100%' }}>
             {forecast.map((f, i) => (
               <div key={i} className="glass-tile" style={{ flex: 1, padding: '10px 2px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -147,7 +143,6 @@ function App() {
             ))}
           </div>
 
-          {/* Details Grid - Πιο συμπαγές layout */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', width: '100%' }}>
             <DetailTile label="ΑΙΣΘΗΣΗ" icon="thermostat" value={`${Math.round(weather.main.feels_like)}°`} />
             <DetailTile label="ΥΓΡΑΣΙΑ" icon="water_drop" value={`${weather.main.humidity}%`} />
