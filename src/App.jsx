@@ -52,21 +52,21 @@ function App() {
 
   return (
     <div style={{ 
-      /* ΑΛΛΑΓΗ 1: min-height αντί για height */
+      /* Η ΛΥΣΗ: minHeight αντί για height και αφαίρεση του fixed/overflow hidden */
       minHeight: '100vh', 
       width: '100vw', 
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 
       color: 'white', 
-      /* ΑΛΛΑΓΗ 2: Τεράστιο padding κάτω (100px) για σίγουρο περιθώριο */
-      padding: '40px 15px 100px 15px', 
+      /* Προσθέτουμε μεγάλο padding κάτω (120px) για το περιθώριο που θες */
+      padding: '40px 15px 120px 15px', 
       boxSizing: 'border-box',
       background: getBackground(), 
       transition: '1s ease', 
-      /* ΑΛΛΑΓΗ 3: flex-start ώστε το περιεχόμενο να "ρέει" προς τα κάτω */
+      /* justifyContent: flex-start ώστε να ξεκινάει από πάνω και να επεκτείνεται */
       justifyContent: 'flex-start',
-      overflowY: 'auto'
+      overflowY: 'auto' 
     }}>
       
       <style>
@@ -102,12 +102,18 @@ function App() {
             .main-temp { font-size: 4.5rem !important; }
             .city-name { font-size: 2.5rem !important; }
           }
+          
+          /* Ωραίο scrollbar για να μην χαλάει το design */
+          ::-webkit-scrollbar { width: 6px; }
+          ::-webkit-scrollbar-track { background: transparent; }
+          ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
         `}
       </style>
 
       {weather && (
         <div style={{ textAlign: 'center', width: '100%', maxWidth: '480px', display: 'flex', flexDirection: 'column', gap: '25px' }}>
           
+          {/* Top Section */}
           <div>
             <div style={{ fontSize: '1.2rem', fontWeight: '800', opacity: 0.9 }}>
               {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
@@ -124,6 +130,7 @@ function App() {
             </div>
           </div>
 
+          {/* Search Section */}
           <div style={{ position: 'relative', width: '100%', zIndex: 100 }}>
             <div className="search-wrapper">
               <input className="search-input" type="text" placeholder="Αναζήτηση..." value={city} 
@@ -134,6 +141,7 @@ function App() {
             </div>
           </div>
 
+          {/* Forecast Tiles */}
           <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
             {forecast.map((f, i) => (
               <div key={i} className="glass-tile" style={{ flex: 1, padding: '15px 5px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -144,6 +152,7 @@ function App() {
             ))}
           </div>
 
+          {/* Details Grid - Με το περιθώριο που θες */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%' }}>
             <DetailTile label="ΑΙΣΘΗΣΗ" icon="thermostat" value={`${Math.round(weather.main.feels_like)}°`} />
             <DetailTile label="ΥΓΡΑΣΙΑ" icon="water_drop" value={`${weather.main.humidity}%`} />
