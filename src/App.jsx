@@ -57,7 +57,7 @@ function App() {
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 
-      justifyContent: 'center', // ΑΥΤΟ ΤΟ ΚΑΤΕΒΑΖΕΙ ΣΤΗ ΜΕΣΗ ΚΑΤΑΚΟΡΥΦΑ
+      justifyContent: 'center', 
       color: 'white', 
       padding: '20px 12px', 
       boxSizing: 'border-box',
@@ -129,6 +129,15 @@ function App() {
               <input className="search-input" type="text" placeholder="Αναζήτηση πόλης..." value={city} 
                 onChange={(e) => {setCity(e.target.value); setShowDropdown(true);}} 
                 onKeyDown={(e) => e.key === "Enter" && getWeather()} />
+              {/* ΤΟ ΚΟΥΜΠΙ Χ ΠΟΥ ΕΠΑΝΗΛΘΕ */}
+              {city && (
+                <span 
+                  style={{ color: '#888', cursor: 'pointer', padding: '0 10px', fontSize: '1.2rem', fontWeight: 'bold' }} 
+                  onClick={() => setCity("")}
+                >
+                  ✕
+                </span>
+              )}
               <button className="search-btn" onClick={() => getWeather()}>ΑΝΑΖΗΤΗΣΗ</button>
             </div>
           </div>
