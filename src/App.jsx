@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 
 function App() {
@@ -54,16 +55,12 @@ function App() {
     localStorage.setItem("weatherHistory", JSON.stringify(history));
   }, [history]);
 
-  const filteredHistory = history.filter(h => 
-    h.toLowerCase().startsWith(city.toLowerCase()) && city.length > 0
-  );
-
   return (
     <div style={{ 
-      height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', 
-      alignItems: 'center', color: 'white', padding: '10px', boxSizing: 'border-box',
-      background: getBackground(), transition: '1s ease', justifyContent: 'center',
-      overflow: 'hidden', position: 'fixed'
+      minHeight: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', 
+      alignItems: 'center', color: 'white', padding: '40px 15px', boxSizing: 'border-box',
+      background: getBackground(), transition: '1s ease', justifyContent: 'flex-start',
+      overflowY: 'auto'
     }}>
       
       <style>
@@ -96,7 +93,6 @@ function App() {
           }
 
           .mi-icon { font-family: 'Material Icons Round'; font-size: 26px; margin-bottom: 4px; color: rgba(255,255,255,0.95); }
-
           .weather-icon-main { filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.6)); width: 100px; }
           .weather-icon-small { filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.5)); width: 45px; }
 
@@ -109,25 +105,22 @@ function App() {
       </style>
 
       {weather && (
-        <div style={{ textAlign: 'center', width: '100%', maxWidth: '480px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        <div style={{ textAlign: 'center', width: '100%', maxWidth: '480px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          {/* Main Info Section */}
-          <div>
+          {/* Main Info - Με περιθώριο πάνω */}
+          <div style={{ marginBottom: '5px' }}>
             <div style={{ fontSize: '1.2rem', fontWeight: '800', opacity: 0.9 }}>
               {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
             </div>
             
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px', marginTop: '5px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px', marginTop: '10px' }}>
               <div className="main-temp" style={{ fontSize: '6rem', fontWeight: '900', lineHeight: 1.1 }}>{Math.round(weather.main.temp)}°</div>
               <h1 className="city-name" style={{ fontSize: '3.2rem', margin: 0, fontWeight: '900', lineHeight: 1.1 }}>{weather.name}</h1>
             </div>
 
-            {/* ΕΙΚΟΝΙΔΙΟ ΚΑΙ ΠΕΡΙΓΡΑΦΗ (ΕΠΑΝΑΦΟΡΑ) */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '-5px' }}>
               <img className="weather-icon-main" src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon" />
-              <div style={{ fontSize: '1.5rem', fontWeight: '800', textTransform: 'lowercase' }}>
-                {weather.weather[0].description}
-              </div>
+              <div style={{ fontSize: '1.5rem', fontWeight: '800' }}>{weather.weather[0].description}</div>
             </div>
           </div>
 
@@ -140,31 +133,21 @@ function App() {
               {city && <span style={{ color: '#888', cursor: 'pointer', padding: '0 10px' }} onClick={() => setCity("")}>✕</span>}
               <button className="search-btn" onClick={() => getWeather()}>ΑΝΑΖΗΤΗΣΗ</button>
             </div>
-            {showDropdown && filteredHistory.length > 0 && (
-              <div style={{ position: 'absolute', top: '110%', left: 0, right: 0 }}>
-                {filteredHistory.map((h, i) => (
-                  <div key={i} style={{ background: 'white', color: '#333', padding: '12px 20px', marginTop: '5px', borderRadius: '15px', display: 'flex', justifyContent: 'space-between', fontWeight: '700', cursor: 'pointer', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }} onClick={() => getWeather(h)}>
-                    <span>{h}</span>
-                    <span style={{ color: '#ff4d4d' }} onClick={(e) => { e.stopPropagation(); setHistory(prev => prev.filter(item => item !== h)); }}>✕</span>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
 
-          {/* Forecast Cards - Μεγαλύτερα */}
+          {/* Forecast Cards */}
           <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
             {forecast.map((f, i) => (
               <div key={i} className="glass-tile" style={{ flex: 1, padding: '15px 5px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ fontSize: '0.85rem', fontWeight: '900', marginBottom: '5px' }}>{new Date(f.dt_txt).toLocaleDateString('el-GR', {weekday: 'short'}).toUpperCase()}</div>
+                <div style={{ fontSize: '0.85rem', fontWeight: '900' }}>{new Date(f.dt_txt).toLocaleDateString('el-GR', {weekday: 'short'}).toUpperCase()}</div>
                 <img className="weather-icon-small" src={`https://openweathermap.org/img/wn/${f.weather[0].icon}.png`} alt="icon" />
-                <div style={{ fontWeight: '900', fontSize: '1.3rem', marginTop: '5px' }}>{Math.round(f.main.temp)}°</div>
+                <div style={{ fontWeight: '900', fontSize: '1.3rem' }}>{Math.round(f.main.temp)}°</div>
               </div>
             ))}
           </div>
 
-          {/* Detail Grid - Με εικονίδια και Μεγάλα Tiles */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%' }}>
+          {/* Detail Grid - Με περιθώριο κάτω */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%', marginBottom: '30px' }}>
             <DetailTile label="ΑΙΣΘΗΣΗ" icon="thermostat" value={`${Math.round(weather.main.feels_like)}°`} />
             <DetailTile label="ΥΓΡΑΣΙΑ" icon="water_drop" value={`${weather.main.humidity}%`} />
             <DetailTile label="ΑΝΕΜΟΣ" icon="air" value={`${weather.wind.speed}m/s`} />
