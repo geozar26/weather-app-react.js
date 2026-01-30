@@ -59,7 +59,8 @@ function App() {
 
       setWeather(data);
       setForecast(fData.list.filter(item => item.dt_txt.includes("12:00:00")).slice(0, 5));
-      setCity(""); setShowDropdown(false);
+      setCity(""); 
+      setShowDropdown(false);
       
       setHistory(prev => {
         const newHist = [data.name, ...prev.filter(c => c !== data.name)].slice(0, 10);
@@ -83,7 +84,7 @@ function App() {
       alignItems: 'center', color: 'white', padding: '10px', boxSizing: 'border-box',
       background: getBackground(), 
       transition: 'background 1s ease',
-      overflow: 'hidden', position: 'fixed', justifyContent: 'center' // Κεντράρισμα στη μέση
+      overflow: 'hidden', position: 'fixed', justifyContent: 'center'
     }}>
       
       <style>
@@ -99,25 +100,25 @@ function App() {
           .dropdown-tile {
             background: rgba(255, 255, 255, 0.95);
             color: #333; 
-            padding: 8px 15px;
+            padding: 10px 15px;
             border-radius: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer; 
-            font-weight: 600;
+            font-weight: 700;
             width: 100%; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            font-size: 0.95rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            font-size: 1rem;
+            margin-bottom: 4px;
           }
           .mi-icon { font-family: 'Material Icons Round'; font-size: 24px; }
 
-          /* Responsive ρυθμίσεις */
           @media (max-width: 391px) {
             .search-input { padding: 10px 12px !important; font-size: 0.9rem !important; }
-            .search-btn { padding: 10px 12px !important; font-size: 0.7rem !important; min-width: fit-content; }
-            .main-temp { font-size: 3.2rem !important; }
-            .city-name { font-size: 1.8rem !important; }
+            .search-btn { padding: 10px 12px !important; font-size: 0.75rem !important; min-width: fit-content; }
+            .main-temp { font-size: 3.5rem !important; }
+            .city-name { font-size: 2rem !important; }
           }
         `}
       </style>
@@ -129,7 +130,7 @@ function App() {
         }}>
           
           <div style={{ marginBottom: '10px' }}>
-            <div style={{ fontSize: '1.1rem', fontWeight: '800', opacity: 1, marginBottom: '5px' }}>
+            <div style={{ fontSize: '1.2rem', fontWeight: '800', textShadow: '0 2px 4px rgba(0,0,0,0.2)' }}>
               {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
             </div>
 
@@ -140,59 +141,59 @@ function App() {
               gap: '15px',
               marginTop: '15px'
             }}>
-              <div className="main-temp" style={{ fontSize: '4rem', fontWeight: '800', lineHeight: '1' }}>
+              <div className="main-temp" style={{ fontSize: '4.5rem', fontWeight: '800', lineHeight: '1' }}>
                 {Math.round(weather.main.temp)}°
               </div>
-              <h1 className="city-name" style={{ fontSize: '2.2rem', margin: '0', fontWeight: '900', lineHeight: '1' }}>
+              <h1 className="city-name" style={{ fontSize: '2.5rem', margin: '0', fontWeight: '900', lineHeight: '1' }}>
                 {weather.name}
               </h1>
             </div>
             
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px', marginTop: '5px' }}>
-                <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon" width="50" />
-                <div style={{ fontSize: '1.2rem', fontWeight: '700' }}>{weather.weather[0].description}</div>
+                <img src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon" width="60" />
+                <div style={{ fontSize: '1.3rem', fontWeight: '700' }}>{weather.weather[0].description}</div>
             </div>
           </div>
 
-          <div style={{ position: 'relative', width: '100%', marginBottom: '8px' }}>
-            <div style={{ background: 'white', borderRadius: '50px', padding: '4px', display: 'flex', alignItems: 'center', boxShadow: '0 8px 20px rgba(0,0,0,0.15)' }}>
+          <div style={{ position: 'relative', width: '100%', marginBottom: '10px' }}>
+            <div style={{ background: 'white', borderRadius: '50px', padding: '5px', display: 'flex', alignItems: 'center', boxShadow: '0 8px 25px rgba(0,0,0,0.2)' }}>
               <input 
                 className="search-input"
-                style={{ flex: 1, border: 'none', outline: 'none', padding: '10px 20px', fontSize: '1rem', color: '#333', background: 'transparent', minWidth: '0' }} 
+                style={{ flex: 1, border: 'none', outline: 'none', padding: '12px 20px', fontSize: '1.1rem', color: '#111', background: 'transparent', minWidth: '0' }} 
                 type="text" placeholder="Αναζήτηση..." value={city} 
                 onChange={(e) => {setCity(e.target.value); setShowDropdown(true);}} 
                 onKeyDown={(e) => e.key === "Enter" && getWeather()} 
               />
               <button 
                 className="search-btn"
-                style={{ background: 'black', color: 'white', border: 'none', padding: '10px 22px', borderRadius: '50px', fontWeight: '900', cursor: 'pointer', fontSize: '0.8rem', whiteSpace: 'nowrap' }} 
+                style={{ background: 'black', color: 'white', border: 'none', padding: '12px 25px', borderRadius: '50px', fontWeight: '900', cursor: 'pointer', fontSize: '0.85rem', whiteSpace: 'nowrap' }} 
                 onClick={() => getWeather()}
               >ΑΝΑΖΗΤΗΣΗ</button>
             </div>
 
             {showDropdown && filteredHistory.length > 0 && (
-              <div style={{ position: 'absolute', top: '115%', left: '0', right: '0', zIndex: 100, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ position: 'absolute', top: '115%', left: '0', right: '0', zIndex: 100, display: 'flex', flexDirection: 'column' }}>
                 {filteredHistory.map((h, i) => (
-                  <div key={i} className="dropdown-tile" onClick={() => getWeather(h)}>
+                  <div key={i} className="dropdown-tile" onClick={() => { getWeather(h); setCity(""); setShowDropdown(false); }}>
                     <span>{h}</span>
-                    <span onClick={(e) => deleteHistoryItem(e, h)} style={{ padding: '0 5px' }}>✕</span>
+                    <span onClick={(e) => deleteHistoryItem(e, h)} style={{ padding: '5px', color: '#ff5252' }}>✕</span>
                   </div>
                 ))}
               </div>
             )}
           </div>
 
-          <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', marginBottom: '8px', width: '100%' }}>
+          <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '10px', width: '100%' }}>
             {forecast.map((f, i) => (
-              <div key={i} className="glass-tile" style={{ flex: 1, maxWidth: '75px', padding: '8px 4px' }}>
-                <div style={{ fontSize: '0.7rem', fontWeight: '900' }}>{new Date(f.dt_txt).toLocaleDateString('el-GR', {weekday: 'short'}).toUpperCase()}</div>
-                <img src={`https://openweathermap.org/img/wn/${f.weather[0].icon}.png`} alt="icon" width="25" />
-                <div style={{ fontWeight: '900', fontSize: '1rem' }}>{Math.round(f.main.temp)}°</div>
+              <div key={i} className="glass-tile" style={{ flex: 1, maxWidth: '80px', padding: '10px 5px' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: '900' }}>{new Date(f.dt_txt).toLocaleDateString('el-GR', {weekday: 'short'}).toUpperCase()}</div>
+                <img src={`https://openweathermap.org/img/wn/${f.weather[0].icon}.png`} alt="icon" width="30" />
+                <div style={{ fontWeight: '900', fontSize: '1.1rem' }}>{Math.round(f.main.temp)}°</div>
               </div>
             ))}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', width: '100%' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%' }}>
             <DetailTile label="ΑΙΣΘΗΣΗ" icon="thermostat" value={`${Math.round(weather.main.feels_like)}°`} />
             <DetailTile label="ΥΓΡΑΣΙΑ" icon="water_drop" value={`${weather.main.humidity}%`} />
             <DetailTile label="ΑΝΕΜΟΣ" icon="air" value={`${weather.wind.speed}m/s`} />
@@ -209,11 +210,11 @@ function App() {
 
 function DetailTile({ label, icon, value }) {
   return (
-    <div className="glass-tile" style={{ padding: '10px 4px' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px' }}>
-        <span className="mi-icon" style={{ color: 'white', fontSize: '20px' }}>{icon}</span>
-        <div style={{ fontSize: '0.65rem', fontWeight: '900', letterSpacing: '0.5px' }}>{label}</div>
-        <div style={{ fontSize: '1.1rem', fontWeight: '900' }}>{value}</div>
+    <div className="glass-tile" style={{ padding: '12px 5px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
+        <span className="mi-icon" style={{ color: 'white', fontSize: '22px' }}>{icon}</span>
+        <div style={{ fontSize: '0.7rem', fontWeight: '900', letterSpacing: '0.5px' }}>{label}</div>
+        <div style={{ fontSize: '1.2rem', fontWeight: '900' }}>{value}</div>
       </div>
     </div>
   );
