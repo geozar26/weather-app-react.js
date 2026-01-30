@@ -50,28 +50,37 @@ function App() {
     getWeather(history[0] || "Πάτρα");
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("weatherHistory", JSON.stringify(history));
+  }, [history]);
+
+  const filteredHistory = history.filter(h => 
+    h.toLowerCase().startsWith(city.toLowerCase()) && city.length > 0
+  );
+
   return (
     <div style={{ 
-      // ΔΙΟΡΘΩΣΗ: Επιτρέπουμε το scroll και αφαιρούμε το fixed
+      // ΔΙΟΡΘΩΣΗ LAYOUT ΓΙΑ ΝΑ ΜΗΝ ΚΟΒΕΤΑΙ ΤΙΠΟΤΑ
       minHeight: '100vh', 
       width: '100vw', 
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 
       color: 'white', 
-      padding: '50px 15px 80px 15px', // Αυξημένο padding κάτω (80px) για να μην κόβονται τα details
+      padding: '40px 15px 120px 15px', // Πολύ χώρο κάτω για scroll
       boxSizing: 'border-box',
       background: getBackground(), 
       transition: '1s ease', 
-      justifyContent: 'flex-start',
-      overflowX: 'hidden',
-      overflowY: 'auto' 
+      justifyContent: 'flex-start', // Πάντα από την αρχή
+      overflowY: 'auto',
+      overflowX: 'hidden'
     }}>
       
       <style>
         {`
           * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
           
+          /* ΕΝΙΑΙΟ ΧΡΩΜΑ ΚΑΡΤΑΣ */
           .glass-tile {
             background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(12px);
@@ -80,6 +89,7 @@ function App() {
             border: 1px solid rgba(255, 255, 255, 0.2);
           }
 
+          /* SEARCH BAR ΠΟΥ ΔΕΝ ΣΠΑΕΙ */
           .search-wrapper {
             background: white; border-radius: 50px; padding: 4px;
             display: flex; align-items: center; width: 100%; max-width: 400px;
@@ -106,14 +116,18 @@ function App() {
             .main-temp { font-size: 4.5rem !important; }
             .city-name { font-size: 2.5rem !important; }
           }
+
+          /* Custom Scrollbar */
+          ::-webkit-scrollbar { width: 5px; }
+          ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 10px; }
         `}
       </style>
 
       {weather && (
-        <div style={{ textAlign: 'center', width: '100%', maxWidth: '480px', display: 'flex', flexDirection: 'column', gap: '25px' }}>
+        <div style={{ textAlign: 'center', width: '100%', maxWidth: '480px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          {/* Main Info */}
-          <div>
+          {/* 1. ΗΜΕΡΟΜΗΝΙΑ & ΠΟΛΗ */}
+          <div style={{ marginTop: '10px' }}>
             <div style={{ fontSize: '1.2rem', fontWeight: '800', opacity: 0.9 }}>
               {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
             </div>
@@ -123,13 +137,14 @@ function App() {
               <h1 className="city-name" style={{ fontSize: '3.2rem', margin: 0, fontWeight: '900', lineHeight: 1.1 }}>{weather.name}</h1>
             </div>
 
+            {/* 2. ΚΕΝΤΡΙΚΟ ΕΙΚΟΝΙΔΙΟ & ΠΕΡΙΓΡΑΦΗ */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '-5px' }}>
               <img className="weather-icon-main" src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon" />
               <div style={{ fontSize: '1.5rem', fontWeight: '800' }}>{weather.weather[0].description}</div>
             </div>
           </div>
 
-          {/* Search Bar */}
+          {/* 3. SEARCH BAR ΣΤΗ ΜΕΣΗ */}
           <div style={{ position: 'relative', width: '100%', zIndex: 100 }}>
             <div className="search-wrapper">
               <input className="search-input" type="text" placeholder="Αναζήτηση..." value={city} 
@@ -138,9 +153,20 @@ function App() {
               {city && <span style={{ color: '#888', cursor: 'pointer', padding: '0 10px' }} onClick={() => setCity("")}>✕</span>}
               <button className="search-btn" onClick={() => getWeather()}>ΑΝΑΖΗΤΗΣΗ</button>
             </div>
+            {/* Dropdown Ιστορικού */}
+            {showDropdown && filteredHistory.length > 0 && (
+              <div style={{ position: 'absolute', top: '110%', left: 0, right: 0 }}>
+                {filteredHistory.map((h, i) => (
+                  <div key={i} style={{ background: 'white', color: '#333', padding: '12px 20px', marginTop: '5px', borderRadius: '15px', display: 'flex', justifyContent: 'space-between', fontWeight: '700', cursor: 'pointer', boxShadow: '0 4px 15px rgba(0,0,0,0.2)' }} onClick={() => getWeather(h)}>
+                    <span>{h}</span>
+                    <span style={{ color: '#ff4d4d' }} onClick={(e) => { e.stopPropagation(); setHistory(prev => prev.filter(item => item !== h)); }}>✕</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Forecast Cards */}
+          {/* 4. WEEKLY FORECAST TILES */}
           <div style={{ display: 'flex', gap: '8px', width: '100%' }}>
             {forecast.map((f, i) => (
               <div key={i} className="glass-tile" style={{ flex: 1, padding: '15px 5px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -151,8 +177,8 @@ function App() {
             ))}
           </div>
 
-          {/* Detail Grid - Εδώ προστέθηκε έξτρα margin bottom */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%', marginBottom: '20px' }}>
+          {/* 5. DETAILS GRID ΜΕ ΕΙΚΟΝΙΔΙΑ (Ποτέ δεν κόβεται πια) */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', width: '100%' }}>
             <DetailTile label="ΑΙΣΘΗΣΗ" icon="thermostat" value={`${Math.round(weather.main.feels_like)}°`} />
             <DetailTile label="ΥΓΡΑΣΙΑ" icon="water_drop" value={`${weather.main.humidity}%`} />
             <DetailTile label="ΑΝΕΜΟΣ" icon="air" value={`${weather.wind.speed}m/s`} />
