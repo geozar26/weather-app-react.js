@@ -5,7 +5,7 @@ function App() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false); // Κράτησα το state αν και δεν χρησιμοποιείται στο UI για να μην χαλάσω τη λογική σου
+  const [showDropdown, setShowDropdown] = useState(false);
   const [history, setHistory] = useState(() => {
     const saved = localStorage.getItem("weatherHistory");
     return saved ? JSON.parse(saved) : ["Πάτρα", "Παρίσι", "Χανιά"];
@@ -48,7 +48,6 @@ function App() {
     link.href = "https://fonts.googleapis.com/icon?family=Material+Icons+Round";
     link.rel = "stylesheet";
     document.head.appendChild(link);
-    // Φορτώνει την Πάτρα ή την τελευταία πόλη από το ιστορικό
     getWeather(history[0] || "Πάτρα");
   }, []);
 
@@ -59,7 +58,7 @@ function App() {
       display: 'flex', 
       flexDirection: 'column', 
       alignItems: 'center', 
-      justifyContent: 'center', // Κρατάμε το κεντράρισμα
+      justifyContent: 'center', 
       color: 'white', 
       padding: '20px 12px', 
       boxSizing: 'border-box',
@@ -87,7 +86,7 @@ function App() {
           .search-input {
             flex: 1; border: none; outline: none; padding: 10px 15px;
             font-size: 0.95rem; color: #111; background: transparent; min-width: 0;
-            text-shadow: none; /* Όχι σκιά μέσα στο input */
+            text-shadow: none;
           }
           .search-btn {
             background: black; color: white; border: none; padding: 8px 18px;
@@ -95,7 +94,6 @@ function App() {
             font-size: 0.75rem; white-space: nowrap; flex-shrink: 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
           }
-          /* Το Text Shadow για έντονα γράμματα παντού */
           .intense-text {
             text-shadow: 0 3px 8px rgba(0,0,0,0.35);
           }
@@ -123,25 +121,29 @@ function App() {
           display: 'flex', 
           flexDirection: 'column', 
           gap: '20px',
-          // ΕΔΩ ΕΙΝΑΙ Η ΑΛΛΑΓΗ ΓΙΑ ΝΑ ΠΑΝΕ ΠΙΟ ΚΑΤΩ:
-          paddingTop: '60px' 
+          paddingTop: '60px' // Διατηρώ το κατέβασμα που ζήτησες
         }}>
           
-          {/* Το πάνω μέρος (Ημερομηνία, Θερμοκρασία, Πόλη) */}
-          <div>
-            <div style={{ fontSize: '1.2rem', fontWeight: '700', opacity: 0.95, letterSpacing: '0.5px' }}>
+          {/* Κεντρικό Block Πληροφοριών */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            
+            {/* Ημερομηνία */}
+            <div style={{ fontSize: '1.2rem', fontWeight: '700', opacity: 0.95, letterSpacing: '0.5px', marginBottom: '5px' }}>
               {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
             </div>
             
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginTop: '5px' }}>
+            {/* Θερμοκρασία και Πόλη (Δίπλα-Δίπλα) */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px' }}>
               <div className="main-temp" style={{ fontSize: '5.5rem', fontWeight: '900', lineHeight: 1 }}>{Math.round(weather.main.temp)}°</div>
               <h1 className="city-name" style={{ fontSize: '3rem', margin: 0, fontWeight: '900', lineHeight: 1 }}>{weather.name}</h1>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '-5px' }}>
+            {/* Εικονίδιο και Περιγραφή (Ακριβώς από κάτω, κεντραρισμένα) */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginTop: '10px' }}>
               <img className="weather-icon-main" src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon" />
               <div style={{ fontSize: '1.4rem', fontWeight: '800', textTransform: 'capitalize' }}>{weather.weather[0].description}</div>
             </div>
+
           </div>
 
           {/* Search Input */}
@@ -189,7 +191,6 @@ function App() {
   );
 }
 
-// Ενημερωμένο Component DetailTile που δέχεται χρώμα (color)
 function DetailTile({ label, icon, value, color }) {
   return (
     <div className="glass-tile" style={{ padding: '12px 4px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
