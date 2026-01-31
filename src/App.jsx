@@ -14,7 +14,6 @@ function App() {
 
   const API_KEY = "8e870e1f59cadca07199db1d225e0dec";
 
-  // ΔΙΟΡΘΩΣΗ: Δείχνει όλο το ιστορικό αν είναι κενό το input, αλλιώς φιλτράρει
   const filteredHistory = city.trim() === "" 
     ? history 
     : history.filter(item => item.toLowerCase().startsWith(city.toLowerCase()));
@@ -92,47 +91,49 @@ function App() {
       
       <style>
         {`
-          * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+          * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+          
           .glass-tile {
             background: #5d6d7e !important; 
             border-radius: 22px;
             border: 1px solid rgba(255, 255, 255, 0.1);
           }
+
           .search-wrapper {
             background: white; border-radius: 50px; padding: 4px;
-            display: flex; align-items: center; width: 100%; max-width: 380px;
-            margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-            position: relative; z-index: 100; flex-wrap: nowrap;
+            display: flex; align-items: center; 
+            width: 95%; /* Χρήση ποσοστού για να είναι πάντα ίσια */
+            max-width: 380px;
+            margin: 0 auto; /* Απόλυτο κεντράρισμα */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            position: relative; z-index: 100;
+            flex-wrap: nowrap;
           }
+
           .search-input {
             flex: 1; border: none; outline: none; padding: 10px 15px;
             font-size: 0.95rem; color: #111; background: transparent; min-width: 0;
           }
+
           .search-btn {
             background: black; color: white; border: none; padding: 10px 18px;
             border-radius: 50px; font-weight: 800; cursor: pointer;
             font-size: 0.65rem; white-space: nowrap; flex-shrink: 0;
             transition: transform 0.2s ease;
           }
-          .search-btn:hover { transform: scale(1.05); }
-          .search-btn:active { transform: scale(0.95); }
 
           .history-dropdown {
             position: absolute; top: calc(100% + 8px); left: 0; right: 0;
             background: white; border-radius: 20px; overflow: hidden;
             box-shadow: 0 15px 35px rgba(0,0,0,0.3); z-index: 99;
           }
+
           .history-item {
             display: flex; justify-content: space-between; align-items: center;
             padding: 12px 18px; color: #333; cursor: pointer; border-bottom: 1px solid #f0f0f0;
             font-weight: 600; font-size: 0.9rem;
           }
-          .history-item:hover { background: #f8f8f8; }
-          .close-icon-history { 
-            color: #888; cursor: pointer; padding: 5px; font-size: 1rem;
-            transition: transform 0.2s ease;
-          }
-          .close-icon-history:hover { transform: scale(1.3); color: #333; }
+
           .intense-text { text-shadow: 0 3px 12px rgba(0,0,0,0.4); }
         `}
       </style>
@@ -157,7 +158,8 @@ function App() {
             </div>
           </div>
 
-          <div style={{ position: 'relative', width: '100%' }} ref={dropdownRef}>
+          {/* Search bar container */}
+          <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'center' }} ref={dropdownRef}>
             <div className="search-wrapper">
               <input 
                 className="search-input" 
@@ -171,21 +173,21 @@ function App() {
               {city && <span style={{color:'#888', cursor:'pointer', padding:'0 8px'}} onClick={() => setCity("")}>✕</span>}
               <button className="search-btn" onClick={() => getWeather()}>ΑΝΑΖΗΤΗΣΗ</button>
 
-              {/* Εδώ εμφανίζεται το ιστορικό - είτε όλο είτε φιλτραρισμένο */}
               {showHistory && filteredHistory.length > 0 && (
                 <div className="history-dropdown">
                   {filteredHistory.map((item, index) => (
                     <div key={index} className="history-item" onClick={() => getWeather(item)}>
                       <span>{item}</span>
-                      <span className="close-icon-history" onClick={(e) => removeHistoryItem(e, item)}>✕</span>
+                      <span style={{color: '#888'}} onClick={(e) => removeHistoryItem(e, item)}>✕</span>
                     </div>
                   ))}
                 </div>
               )}
             </div>
-            {error && <div style={{ color: '#FFD700', fontWeight: '700', marginTop: '5px', fontSize: '0.8rem' }}>{error}</div>}
           </div>
+          {error && <div style={{ color: '#FFD700', fontWeight: '700', marginTop: '-15px', fontSize: '0.8rem' }}>{error}</div>}
 
+          {/* Tiles Section */}
           <div style={{ display: 'flex', gap: '6px' }}>
             {forecast.map((f, i) => (
               <div key={i} className="glass-tile" style={{ flex: 1, padding: '10px 2px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
