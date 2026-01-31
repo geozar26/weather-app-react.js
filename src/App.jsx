@@ -59,7 +59,7 @@ function App() {
       alignItems: 'center', 
       justifyContent: 'center', 
       color: 'white', 
-      padding: '20px 12px', 
+      padding: '20px 12px 40px 12px', // Αυξημένο padding κάτω
       boxSizing: 'border-box',
       background: getBackground(), 
       transition: '1s ease', 
@@ -108,18 +108,16 @@ function App() {
       {weather && (
         <div className="intense-text" style={{ 
           textAlign: 'center', width: '100%', maxWidth: '450px', 
-          display: 'flex', flexDirection: 'column', gap: '25px', paddingTop: '40px' 
+          display: 'flex', flexDirection: 'column', gap: '20px', paddingTop: '20px' 
         }}>
           
           {/* Main Info Container */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             
-            {/* Ημερομηνία */}
-            <div style={{ fontSize: '1.25rem', fontWeight: '700', opacity: 0.95, marginBottom: '5px' }}>
+            <div style={{ fontSize: '1.2rem', fontWeight: '700', opacity: 0.9, marginBottom: '2px' }}>
               {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
             </div>
 
-            {/* Θερμοκρασία και Πόλη (Δίπλα-δίπλα) */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px' }}>
               <div className="main-temp" style={{ fontSize: '5.8rem', fontWeight: '900', lineHeight: 1 }}>
                 {Math.round(weather.main.temp)}°
@@ -129,8 +127,7 @@ function App() {
               </h1>
             </div>
 
-            {/* Εικονίδιο και Περιγραφή (Από κάτω, κεντραρισμένα μαζί) */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '0px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '-5px' }}>
               <img className="weather-icon-main" src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon" />
               <div style={{ fontSize: '1.4rem', fontWeight: '800', textTransform: 'capitalize', marginLeft: '-5px' }}>
                 {weather.weather[0].description}
@@ -139,8 +136,8 @@ function App() {
 
           </div>
 
-          {/* Search Input */}
-          <div className="search-wrapper">
+          {/* Search Input - Moved Up slightly with gap reduction */}
+          <div className="search-wrapper" style={{ marginBottom: '10px' }}>
             <input className="search-input" type="text" placeholder="Αναζήτηση πόλης..." value={city} 
               onChange={(e) => setCity(e.target.value)} 
               onKeyDown={(e) => e.key === "Enter" && getWeather()} />
@@ -159,7 +156,7 @@ function App() {
             ))}
           </div>
 
-          {/* Details Grid με Premium Χρώματα */}
+          {/* Details Grid */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
             <DetailTile label="ΑΙΣΘΗΣΗ" icon="thermostat" value={`${Math.round(weather.main.feels_like)}°`} color="#FF5252" />
             <DetailTile label="ΥΓΡΑΣΙΑ" icon="water_drop" value={`${weather.main.humidity}%`} color="#40C4FF" />
