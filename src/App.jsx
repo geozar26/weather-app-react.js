@@ -1,16 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function App() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
   const [error, setError] = useState("");
+  const [showHistory, setShowHistory] = useState(false);
+  const dropdownRef = useRef(null);
   const [history, setHistory] = useState(() => {
     const saved = localStorage.getItem("weatherHistory");
     return saved ? JSON.parse(saved) : ["Πάτρα"];
   });
 
   const API_KEY = "8e870e1f59cadca07199db1d225e0dec";
+
+  useEffect(() => {
+    localStorage.setItem("weatherHistory", JSON.stringify(history));
+  }, [history]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowHistory(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const getBackground = () => {
     if (!weather) return 'linear-gradient(to bottom, #2c3e50, #4ca1af)';
@@ -28,6 +44,7 @@ function App() {
   const getWeather = async (cityName = city) => {
     if (!cityName) return;
     setError("");
+    setShowHistory(false);
     try {
       const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cityName)}&appid=${API_KEY}&units=metric&lang=el`);
       if (!response.ok) {
@@ -41,10 +58,15 @@ function App() {
       setWeather(data);
       setForecast(fData.list.filter(item => item.dt_txt.includes("12:00:00")).slice(0, 5));
       setCity(""); 
-      setHistory(prev => [data.name, ...prev.filter(c => c !== data.name)].slice(0, 10));
+      setHistory(prev => [data.name, ...prev.filter(c => c.toLowerCase() !== data.name.toLowerCase())].slice(0, 5));
     } catch (err) { 
       setError("Πρόβλημα σύνδεσης.");
     }
+  };
+
+  const removeHistoryItem = (e, itemToRemove) => {
+    e.stopPropagation();
+    setHistory(prev => prev.filter(item => item !== itemToRemove));
   };
 
   useEffect(() => {
@@ -59,8 +81,7 @@ function App() {
     <div style={{ 
       minHeight: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', 
       alignItems: 'center', justifyContent: 'center', color: 'white', 
-      padding: '40px 10px 100px 10px', 
-      boxSizing: 'border-box',
+      padding: '40px 10px 100px 10px', boxSizing: 'border-box',
       background: getBackground(), transition: 'background 1s ease', overflowX: 'hidden'
     }}>
       
@@ -68,106 +89,120 @@ function App() {
         {`
           * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
           .glass-tile {
-            background: rgba(255, 255, 255, 0.22);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           }
+          .glass-tile:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.3); }
           .search-wrapper {
-            background: white; border-radius: 50px; padding: 4px;
+            background: white; border-radius: 100px; padding: 4px;
             display: flex; align-items: center; width: 100%; max-width: 380px;
-            margin: 0 auto; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            overflow: hidden;
+            margin: 0 auto; box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+            position: relative; z-index: 100;
           }
           .search-input {
-            flex: 1; border: none; outline: none; padding: 10px 12px;
-            font-size: 0.9rem; color: #111; background: transparent;
-            min-width: 0; /* Σημαντικό για να μη σπάει το flex */
+            flex: 1; border: none; outline: none; padding: 12px 18px;
+            font-size: 1rem; color: #111; background: transparent;
           }
           .search-btn {
-            background: black; color: white; border: none; padding: 10px 15px;
-            border-radius: 50px; font-weight: 800; cursor: pointer;
-            font-size: 0.7rem; white-space: nowrap; /* Εμποδίζει το σπάσιμο κειμένου */
-            flex-shrink: 0; /* Εμποδίζει το κούμπι να μικρύνει */
+            background: #000; color: #fff; border: none; padding: 10px 22px;
+            border-radius: 100px; font-weight: 800; cursor: pointer;
+            font-size: 0.75rem; transition: 0.3s;
           }
-          .intense-text { text-shadow: 0 3px 12px rgba(0,0,0,0.45); }
-          .mi-icon-premium { 
-            font-family: 'Material Icons Round'; 
-            font-size: 26px; 
+          .history-dropdown {
+            position: absolute; top: calc(100% + 12px); left: 0; right: 0;
+            background: rgba(255, 255, 255, 0.98); border-radius: 24px; overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3); z-index: 99;
+            backdrop-filter: blur(10px);
           }
-          .weather-icon-main { filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2)); width: 80px; }
+          .history-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 14px 22px; color: #222; cursor: pointer; transition: 0.2s;
+            border-bottom: 1px solid #eee; font-weight: 700;
+          }
+          .history-item:hover { background: #f0f0f0; }
+          .delete-btn { color: #bbb; padding: 5px; font-size: 1.1rem; }
+          .delete-btn:hover { color: #ff3b30; }
+
+          /* Premium Icon Effects */
+          .icon-glow {
+            animation: pulse 3s infinite ease-in-out;
+            filter: drop-shadow(0 0 8px currentColor);
+          }
+          @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.9; filter: drop-shadow(0 0 5px currentColor); }
+            50% { transform: scale(1.1); opacity: 1; filter: drop-shadow(0 0 12px currentColor); }
+            100% { transform: scale(1); opacity: 0.9; filter: drop-shadow(0 0 5px currentColor); }
+          }
           
-          @media (max-width: 360px) {
-            .main-temp { font-size: 4.5rem !important; }
-            .city-name { font-size: 2.5rem !important; }
-            .search-btn { padding: 10px 12px; font-size: 0.65rem; }
-          }
+          .intense-text { text-shadow: 0 4px 15px rgba(0,0,0,0.4); }
         `}
       </style>
 
       {weather && (
-        <div className="intense-text" style={{ 
-          textAlign: 'center', width: '100%', maxWidth: '450px', 
-          display: 'flex', flexDirection: 'column', gap: '25px'
-        }}>
+        <div className="intense-text" style={{ textAlign: 'center', width: '100%', maxWidth: '450px', display: 'flex', flexDirection: 'column', gap: '28px' }}>
           
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ fontSize: '1.1rem', fontWeight: '700', opacity: 0.9 }}>
+          {/* Header Section */}
+          <div>
+            <div style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '5px' }}>
               {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
             </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
-              <div className="main-temp" style={{ fontSize: '5.5rem', fontWeight: '900', lineHeight: 1 }}>
-                {Math.round(weather.main.temp)}°
-              </div>
-              <h1 className="city-name" style={{ fontSize: '3rem', fontWeight: '900', margin: 0, lineHeight: 1 }}>
-                {weather.name}
-              </h1>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px' }}>
+              <div style={{ fontSize: '6rem', fontWeight: '900', lineHeight: 1 }}>{Math.round(weather.main.temp)}°</div>
+              <h1 style={{ fontSize: '3.5rem', fontWeight: '900', margin: 0, lineHeight: 1 }}>{weather.name}</h1>
             </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '-5px' }}>
-              <img className="weather-icon-main" src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon" />
-              <div style={{ fontSize: '1.3rem', fontWeight: '800', textTransform: 'capitalize', marginLeft: '-5px' }}>
-                {weather.weather[0].description}
-              </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '5px' }}>
+              <img style={{ width: '90px' }} src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon" />
+              <div style={{ fontSize: '1.5rem', fontWeight: '800', textTransform: 'capitalize' }}>{weather.weather[0].description}</div>
             </div>
           </div>
 
-          <div style={{ position: 'relative', width: '100%' }}>
+          {/* Search Area */}
+          <div style={{ position: 'relative', width: '100%' }} ref={dropdownRef}>
             <div className="search-wrapper">
               <input 
                 className="search-input" 
                 type="text" 
-                placeholder="Πόλη..." 
+                placeholder="Αναζήτηση πόλης..." 
                 value={city} 
-                onChange={(e) => { setCity(e.target.value); setError(""); }} 
+                onFocus={() => setShowHistory(true)}
+                onChange={(e) => { setCity(e.target.value); setError(""); setShowHistory(true); }} 
                 onKeyDown={(e) => { if (e.key === "Enter") getWeather(); }} 
               />
-              {city && (
-                <span 
-                  style={{ color: '#888', cursor: 'pointer', padding: '0 8px', fontSize: '1.1rem' }} 
-                  onClick={() => setCity("")}
-                >✕</span>
-              )}
+              {city && <span style={{ color: '#999', cursor: 'pointer', padding: '0 10px', fontWeight: 'bold' }} onClick={() => setCity("")}>✕</span>}
               <button className="search-btn" onClick={() => getWeather()}>ΑΝΑΖΗΤΗΣΗ</button>
+
+              {showHistory && history.length > 0 && (
+                <div className="history-dropdown">
+                  {history.map((item, index) => (
+                    <div key={index} className="history-item" onClick={() => getWeather(item)}>
+                      <span>{item}</span>
+                      <span className="delete-btn" onClick={(e) => removeHistoryItem(e, item)}>✕</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-            {error && <div style={{ color: '#FFC107', fontWeight: '700', marginTop: '8px', fontSize: '0.85rem' }}>{error}</div>}
+            {error && <div style={{ color: '#FFD700', fontWeight: '800', marginTop: '12px', fontSize: '0.9rem' }}>{error}</div>}
           </div>
 
-          <div style={{ display: 'flex', gap: '5px' }}>
+          {/* 5-Day Forecast */}
+          <div style={{ display: 'flex', gap: '8px' }}>
             {forecast.map((f, i) => (
-              <div key={i} className="glass-tile" style={{ flex: 1, padding: '10px 2px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ fontSize: '0.65rem', fontWeight: '900' }}>{new Date(f.dt_txt).toLocaleDateString('el-GR', {weekday: 'short'}).toUpperCase()}</div>
-                <img style={{ width: '35px' }} src={`https://openweathermap.org/img/wn/${f.weather[0].icon}.png`} alt="icon" />
-                <div style={{ fontWeight: '900', fontSize: '1rem' }}>{Math.round(f.main.temp)}°</div>
+              <div key={i} className="glass-tile" style={{ flex: 1, padding: '15px 5px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ fontSize: '0.7rem', fontWeight: '900', opacity: 0.8 }}>{new Date(f.dt_txt).toLocaleDateString('el-GR', {weekday: 'short'}).toUpperCase()}</div>
+                <img style={{ width: '42px' }} src={`https://openweathermap.org/img/wn/${f.weather[0].icon}.png`} alt="icon" />
+                <div style={{ fontWeight: '900', fontSize: '1.1rem' }}>{Math.round(f.main.temp)}°</div>
               </div>
             ))}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+          {/* Premium Details Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
             <DetailTile label="ΑΙΣΘΗΣΗ" icon="thermostat" value={`${Math.round(weather.main.feels_like)}°`} color="#FF5252" />
             <DetailTile label="ΥΓΡΑΣΙΑ" icon="water_drop" value={`${weather.main.humidity}%`} color="#40C4FF" />
             <DetailTile label="ΑΝΕΜΟΣ" icon="air" value={`${Math.round(weather.wind.speed)}m/s`} color="#69F0AE" />
@@ -184,11 +219,20 @@ function App() {
 
 function DetailTile({ label, icon, value, color }) {
   return (
-    <div className="glass-tile" style={{ padding: '12px 2px', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', top: '-10%', left: '-10%', width: '25px', height: '25px', background: color, filter: 'blur(15px)', opacity: 0.15 }}></div>
-      <span className="mi-icon-premium" style={{ color: color, textShadow: `0 0 8px ${color}66`, marginBottom: '4px' }}>{icon}</span>
-      <div style={{ fontSize: '0.6rem', fontWeight: '900', marginBottom: '2px', opacity: 0.8 }}>{label}</div>
-      <div style={{ fontSize: '1rem', fontWeight: '900' }}>{value}</div>
+    <div className="glass-tile" style={{ padding: '18px 5px', display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
+      {/* Background radial glow */}
+      <div style={{ 
+        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+        width: '100%', height: '100%', background: `radial-gradient(circle, ${color}22 0%, transparent 70%)`,
+        pointerEvents: 'none'
+      }}></div>
+      
+      <span className="material-icons-round icon-glow" style={{ 
+        color: color, fontSize: '28px', marginBottom: '6px'
+      }}>{icon}</span>
+      
+      <div style={{ fontSize: '0.6rem', fontWeight: '900', marginBottom: '2px', opacity: 0.8, letterSpacing: '0.5px' }}>{label}</div>
+      <div style={{ fontSize: '1.1rem', fontWeight: '900' }}>{value}</div>
     </div>
   );
 }
