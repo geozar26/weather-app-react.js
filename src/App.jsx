@@ -7,7 +7,8 @@ function App() {
   const [error, setError] = useState("");
   const [history, setHistory] = useState(() => {
     const saved = localStorage.getItem("weatherHistory");
-    return saved ? JSON.parse(saved) : ["Πάτρα", "Παρίσι", "Χανιά"];
+    // Εδώ ορίσαμε την Πάτρα ως την πρώτη επιλογή αν το ιστορικό είναι κενό
+    return saved ? JSON.parse(saved) : ["Πάτρα"];
   });
 
   const API_KEY = "8e870e1f59cadca07199db1d225e0dec";
@@ -54,7 +55,9 @@ function App() {
     link.href = "https://fonts.googleapis.com/icon?family=Material+Icons+Round";
     link.rel = "stylesheet";
     document.head.appendChild(link);
-    getWeather(history[0] || "Πάτρα");
+    
+    // Φόρτωση Πάτρας κατά την εκκίνηση
+    getWeather("Πάτρα");
   }, []);
 
   return (
@@ -77,7 +80,6 @@ function App() {
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
           }
-          /* Hover effect για τις κάρτες */
           .glass-tile:hover {
             transform: translateY(-5px);
             background: rgba(255, 255, 255, 0.3);
@@ -104,7 +106,7 @@ function App() {
           .weather-icon-small { filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3)); width: 38px; }
           
           .error-text {
-            color: #FFC107; /* Premium Amber Gold */
+            color: #FFC107;
             font-weight: 700;
             font-size: 0.9rem;
             margin-top: 10px;
