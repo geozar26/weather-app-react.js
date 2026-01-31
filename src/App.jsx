@@ -51,12 +51,12 @@ function App() {
     setError("");
     setShowHistory(false);
     try {
-      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cityName)}&appid=${API_KEY}&units=metric&lang=el`);
+      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cityName)}&appid=8e870e1f59cadca07199db1d225e0dec&units=metric&lang=el`);
       if (!response.ok) {
         setError("Η περιοχή δεν βρέθηκε.");
         return;
       }
-      const fResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(cityName)}&appid=${API_KEY}&units=metric&lang=el`);
+      const fResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(cityName)}&appid=8e870e1f59cadca07199db1d225e0dec&units=metric&lang=el`);
       const data = await response.json();
       const fData = await fResponse.json();
 
@@ -86,8 +86,7 @@ function App() {
     <div style={{ 
       minHeight: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', 
       alignItems: 'center', justifyContent: 'center', color: 'white', 
-      padding: '20px 10px', 
-      boxSizing: 'border-box',
+      padding: '20px 10px', boxSizing: 'border-box',
       background: getBackground(), transition: 'background 1s ease', overflowX: 'hidden'
     }}>
       
@@ -106,15 +105,14 @@ function App() {
             display: flex; align-items: center; width: 100%; max-width: 380px;
             margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
             position: relative; z-index: 100;
-            flex-wrap: nowrap; /* Εμποδίζει το σπάσιμο */
+            flex-wrap: nowrap;
           }
           .search-input {
-            flex: 1; border: none; outline: none; padding: 10px 12px;
-            font-size: 0.95rem; color: #111; background: transparent;
-            min-width: 0; /* Επιτρέπει στο input να μικρύνει χωρίς να σπρώχνει το κουμπί */
+            flex: 1; border: none; outline: none; padding: 10px 15px;
+            font-size: 0.95rem; color: #111; background: transparent; min-width: 0;
           }
           .search-btn {
-            background: black; color: white; border: none; padding: 10px 15px;
+            background: black; color: white; border: none; padding: 10px 18px;
             border-radius: 50px; font-weight: 800; cursor: pointer;
             font-size: 0.65rem; white-space: nowrap; flex-shrink: 0;
             transition: transform 0.2s ease;
@@ -132,6 +130,7 @@ function App() {
             padding: 12px 18px; color: #333; cursor: pointer; border-bottom: 1px solid #f0f0f0;
             font-weight: 600; font-size: 0.9rem;
           }
+          .history-item:hover { background: #f8f8f8; }
           .close-icon-history { 
             color: #888; cursor: pointer; padding: 5px; font-size: 1rem;
             transition: transform 0.2s ease;
@@ -161,7 +160,6 @@ function App() {
             </div>
           </div>
 
-          {/* Fixed Search Bar for small screens */}
           <div style={{ position: 'relative', width: '100%' }} ref={dropdownRef}>
             <div className="search-wrapper">
               <input 
@@ -200,7 +198,7 @@ function App() {
             ))}
           </div>
 
-          {/* Unified Color Grid Tiles */}
+          {/* Τώρα όλες οι κάρτες έχουν την ίδια κλάση glass-tile και κανένα έξτρα χρώμα στο φόντο */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
             <DetailTile label="ΑΙΣΘΗΣΗ" icon="thermostat" value={`${Math.round(weather.main.feels_like)}°`} color="#E57373" />
             <DetailTile label="ΥΓΡΑΣΙΑ" icon="water_drop" value={`${weather.main.humidity}%`} color="#4FC3F7" />
@@ -222,8 +220,7 @@ function DetailTile({ label, icon, value, color }) {
       padding: '15px 2px', 
       display: 'flex', 
       flexDirection: 'column', 
-      alignItems: 'center',
-      /* Ενιαίο χρώμα χωρίς radial gradient background */
+      alignItems: 'center'
     }}>
       <span className="material-icons-round" style={{ color: color, fontSize: '22px', marginBottom: '4px' }}>{icon}</span>
       <div style={{ fontSize: '0.55rem', fontWeight: '800', marginBottom: '2px', opacity: 0.85 }}>{label}</div>
