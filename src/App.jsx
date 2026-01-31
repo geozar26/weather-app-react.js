@@ -4,7 +4,7 @@ function App() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [error, setError] = useState(""); // State για το μήνυμα λάθους
   const [history, setHistory] = useState(() => {
     const saved = localStorage.getItem("weatherHistory");
     return saved ? JSON.parse(saved) : ["Πάτρα", "Παρίσι", "Χανιά"];
@@ -27,9 +27,15 @@ function App() {
 
   const getWeather = async (cityName = city) => {
     if (!cityName) return;
+    setError(""); // Καθαρισμός λάθους πριν την αναζήτηση
     try {
       const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cityName)}&appid=${API_KEY}&units=metric&lang=el`);
-      if (!response.ok) return;
+      
+      if (!response.ok) {
+        setError("Η περιοχή δεν βρέθηκε!"); // Ενεργοποίηση λάθους
+        return;
+      }
+
       const fResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(cityName)}&appid=${API_KEY}&units=metric&lang=el`);
       const data = await response.json();
       const fData = await fResponse.json();
@@ -37,9 +43,11 @@ function App() {
       setWeather(data);
       setForecast(fData.list.filter(item => item.dt_txt.includes("12:00:00")).slice(0, 5));
       setCity(""); 
-      setShowDropdown(false);
       setHistory(prev => [data.name, ...prev.filter(c => c !== data.name)].slice(0, 10));
-    } catch (err) { console.error(err); }
+    } catch (err) { 
+      console.error(err);
+      setError("Πρόβλημα σύνδεσης");
+    }
   };
 
   useEffect(() => {
@@ -52,18 +60,10 @@ function App() {
 
   return (
     <div style={{ 
-      minHeight: '100vh', 
-      width: '100vw', 
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center', 
-      justifyContent: 'center', 
-      color: 'white', 
-      padding: '20px 12px 40px 12px', // Αυξημένο padding κάτω
-      boxSizing: 'border-box',
-      background: getBackground(), 
-      transition: '1s ease', 
-      overflowX: 'hidden'
+      minHeight: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', 
+      alignItems: 'center', justifyContent: 'center', color: 'white', 
+      padding: '20px 12px 40px 12px', boxSizing: 'border-box',
+      background: getBackground(), transition: '1s ease', overflowX: 'hidden'
     }}>
       
       <style>
@@ -91,17 +91,20 @@ function App() {
             border-radius: 50px; font-weight: 800; cursor: pointer;
             font-size: 0.75rem; white-space: nowrap;
           }
-          .intense-text {
-            text-shadow: 0 3px 12px rgba(0,0,0,0.45);
-          }
+          .intense-text { text-shadow: 0 3px 12px rgba(0,0,0,0.45); }
           .mi-icon { font-family: 'Material Icons Round'; font-size: 26px; }
           .weather-icon-main { filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2)); width: 85px; }
           .weather-icon-small { filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3)); width: 38px; }
-
-          @media (max-width: 399px) {
-            .main-temp { font-size: 4.5rem !important; }
-            .city-name { font-size: 2.5rem !important; }
+          
+          .error-text {
+            color: #FFEA00;
+            font-weight: 800;
+            font-size: 0.95rem;
+            margin-top: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
           }
+          @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
         `}
       </style>
 
@@ -111,9 +114,7 @@ function App() {
           display: 'flex', flexDirection: 'column', gap: '20px', paddingTop: '20px' 
         }}>
           
-          {/* Main Info Container */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            
             <div style={{ fontSize: '1.2rem', fontWeight: '700', opacity: 0.9, marginBottom: '2px' }}>
               {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
             </div>
@@ -133,19 +134,27 @@ function App() {
                 {weather.weather[0].description}
               </div>
             </div>
-
           </div>
 
-          {/* Search Input - Moved Up slightly with gap reduction */}
-          <div className="search-wrapper" style={{ marginBottom: '10px' }}>
-            <input className="search-input" type="text" placeholder="Αναζήτηση πόλης..." value={city} 
-              onChange={(e) => setCity(e.target.value)} 
-              onKeyDown={(e) => e.key === "Enter" && getWeather()} />
-            {city && <span style={{ color: '#888', cursor: 'pointer', padding: '0 10px' }} onClick={() => setCity("")}>✕</span>}
-            <button className="search-btn" onClick={() => getWeather()}>ΑΝΑΖΗΤΗΣΗ</button>
+          {/* Search Area */}
+          <div style={{ position: 'relative' }}>
+            <div className="search-wrapper">
+              <input 
+                className="search-input" 
+                type="text" 
+                placeholder="Αναζήτηση πόλης..." 
+                value={city} 
+                onChange={(e) => { setCity(e.target.value); setError(""); }} 
+                onKeyDown={(e) => e.key === "Enter" && getWeather()} 
+              />
+              {city && <span style={{ color: '#888', cursor: 'pointer', padding: '0 10px' }} onClick={() => setCity("")}>✕</span>}
+              <button className="search-btn" onClick={() => getWeather()}>ΑΝΑΖΗΤΗΣΗ</button>
+            </div>
+            
+            {/* Το κίτρινο κείμενο λάθους */}
+            {error && <div className="error-text">{error}</div>}
           </div>
 
-          {/* 5-Day Forecast */}
           <div style={{ display: 'flex', gap: '6px' }}>
             {forecast.map((f, i) => (
               <div key={i} className="glass-tile" style={{ flex: 1, padding: '10px 2px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -156,7 +165,6 @@ function App() {
             ))}
           </div>
 
-          {/* Details Grid */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
             <DetailTile label="ΑΙΣΘΗΣΗ" icon="thermostat" value={`${Math.round(weather.main.feels_like)}°`} color="#FF5252" />
             <DetailTile label="ΥΓΡΑΣΙΑ" icon="water_drop" value={`${weather.main.humidity}%`} color="#40C4FF" />
