@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 
 function App() {
@@ -121,27 +120,42 @@ function App() {
           display: 'flex', 
           flexDirection: 'column', 
           gap: '20px',
-          paddingTop: '60px' // Διατηρώ το κατέβασμα που ζήτησες
+          paddingTop: '60px'
         }}>
           
-          {/* Κεντρικό Block Πληροφοριών */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {/* Ημερομηνία */}
+          <div style={{ fontSize: '1.2rem', fontWeight: '700', opacity: 0.95, letterSpacing: '0.5px' }}>
+            {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
+          </div>
+
+          {/* GRID LAYOUT ΓΙΑ ΤΕΛΕΙΑ ΣΤΟΙΧΙΣΗ */}
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'auto auto', // Δύο στήλες που προσαρμόζονται
+            justifyContent: 'center', // Κεντράρισμα όλου του grid
+            alignItems: 'center', 
+            columnGap: '20px', // Απόσταση μεταξύ Θερμοκρασίας και Πόλης
+            rowGap: '0px'      // Απόσταση μεταξύ πάνω και κάτω γραμμής
+          }}>
             
-            {/* Ημερομηνία */}
-            <div style={{ fontSize: '1.2rem', fontWeight: '700', opacity: 0.95, letterSpacing: '0.5px', marginBottom: '5px' }}>
-              {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
-            </div>
-            
-            {/* Θερμοκρασία και Πόλη (Δίπλα-Δίπλα) */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px' }}>
-              <div className="main-temp" style={{ fontSize: '5.5rem', fontWeight: '900', lineHeight: 1 }}>{Math.round(weather.main.temp)}°</div>
-              <h1 className="city-name" style={{ fontSize: '3rem', margin: 0, fontWeight: '900', lineHeight: 1 }}>{weather.name}</h1>
+            {/* Κελί 1: Θερμοκρασία (Αριστερά Πάνω) */}
+            <div className="main-temp" style={{ fontSize: '5.5rem', fontWeight: '900', lineHeight: 1, justifySelf: 'center' }}>
+              {Math.round(weather.main.temp)}°
             </div>
 
-            {/* Εικονίδιο και Περιγραφή (Ακριβώς από κάτω, κεντραρισμένα) */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginTop: '10px' }}>
+            {/* Κελί 2: Πόλη (Δεξιά Πάνω) */}
+            <h1 className="city-name" style={{ fontSize: '3rem', margin: 0, fontWeight: '900', lineHeight: 1, justifySelf: 'start', textAlign: 'left' }}>
+              {weather.name}
+            </h1>
+
+            {/* Κελί 3: Εικονίδιο (Αριστερά Κάτω - Ακριβώς κάτω από τη Θερμοκρασία) */}
+            <div style={{ justifySelf: 'center', display: 'flex', justifyContent: 'center' }}>
               <img className="weather-icon-main" src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon" />
-              <div style={{ fontSize: '1.4rem', fontWeight: '800', textTransform: 'capitalize' }}>{weather.weather[0].description}</div>
+            </div>
+
+            {/* Κελί 4: Περιγραφή (Δεξιά Κάτω - Ακριβώς κάτω από την Πόλη) */}
+            <div style={{ fontSize: '1.4rem', fontWeight: '800', textTransform: 'capitalize', justifySelf: 'start', textAlign: 'left' }}>
+              {weather.weather[0].description}
             </div>
 
           </div>
