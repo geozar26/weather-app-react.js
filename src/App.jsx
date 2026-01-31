@@ -92,10 +92,10 @@ function App() {
             font-size: 0.75rem; white-space: nowrap;
           }
           .intense-text {
-            text-shadow: 0 3px 12px rgba(0,0,0,0.4);
+            text-shadow: 0 3px 12px rgba(0,0,0,0.45);
           }
           .mi-icon { font-family: 'Material Icons Round'; font-size: 26px; }
-          .weather-icon-main { filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2)); width: 85px; margin-bottom: -10px; }
+          .weather-icon-main { filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2)); width: 85px; }
           .weather-icon-small { filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3)); width: 38px; }
 
           @media (max-width: 399px) {
@@ -108,40 +108,35 @@ function App() {
       {weather && (
         <div className="intense-text" style={{ 
           textAlign: 'center', width: '100%', maxWidth: '450px', 
-          display: 'flex', flexDirection: 'column', gap: '20px', paddingTop: '50px' 
+          display: 'flex', flexDirection: 'column', gap: '25px', paddingTop: '40px' 
         }}>
           
-          {/* Ημερομηνία */}
-          <div style={{ fontSize: '1.2rem', fontWeight: '700', opacity: 0.95 }}>
-            {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
-          </div>
-
-          {/* GRID: Σπασμένο σε 2 Στήλες */}
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: '1fr 1fr', 
-            alignItems: 'start', 
-            columnGap: '10px',
-            justifyItems: 'center'
-          }}>
+          {/* Main Info Container */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             
-            {/* Στήλη 1: Θερμοκρασία και ακριβώς κάτω Icon + Περιγραφή */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div className="main-temp" style={{ fontSize: '5.5rem', fontWeight: '900', lineHeight: 1 }}>
+            {/* Ημερομηνία */}
+            <div style={{ fontSize: '1.25rem', fontWeight: '700', opacity: 0.95, marginBottom: '5px' }}>
+              {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
+            </div>
+
+            {/* Θερμοκρασία και Πόλη (Δίπλα-δίπλα) */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px' }}>
+              <div className="main-temp" style={{ fontSize: '5.8rem', fontWeight: '900', lineHeight: 1 }}>
                 {Math.round(weather.main.temp)}°
               </div>
+              <h1 className="city-name" style={{ fontSize: '3.2rem', fontWeight: '900', margin: 0, lineHeight: 1 }}>
+                {weather.name}
+              </h1>
+            </div>
+
+            {/* Εικονίδιο και Περιγραφή (Από κάτω, κεντραρισμένα μαζί) */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '0px' }}>
               <img className="weather-icon-main" src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon" />
-              <div style={{ fontSize: '1.2rem', fontWeight: '800', textTransform: 'capitalize', marginTop: '0px' }}>
+              <div style={{ fontSize: '1.4rem', fontWeight: '800', textTransform: 'capitalize', marginLeft: '-5px' }}>
                 {weather.weather[0].description}
               </div>
             </div>
 
-            {/* Στήλη 2: Όνομα Πόλης */}
-            <div style={{ alignSelf: 'center' }}>
-              <h1 className="city-name" style={{ fontSize: '3rem', margin: 0, fontWeight: '900', lineHeight: 1.1, textAlign: 'left' }}>
-                {weather.name}
-              </h1>
-            </div>
           </div>
 
           {/* Search Input */}
