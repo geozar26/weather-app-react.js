@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 
 function App() {
@@ -93,13 +92,18 @@ function App() {
       <style>
         {`
           * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+          
+          /* ΕΔΩ ΕΓΙΝΕ Η ΔΙΟΡΘΩΣΗ ΓΙΑ ΤΗ ΔΙΧΡΩΜΙΑ */
           .glass-tile {
-            background: rgba(255, 255, 255, 0.22);
+            background-color: rgba(255, 255, 255, 0.22) !important; /* Force solid color */
+            background-image: none !important; /* Remove any potential gradients */
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-radius: 22px;
             border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: none !important; /* Remove inner shadows that look like dual color */
           }
+
           .search-wrapper {
             background: white; border-radius: 50px; padding: 4px;
             display: flex; align-items: center; width: 100%; max-width: 380px;
@@ -188,6 +192,7 @@ function App() {
             {error && <div style={{ color: '#FFD700', fontWeight: '700', marginTop: '5px', fontSize: '0.8rem' }}>{error}</div>}
           </div>
 
+          {/* Forecast - Single Color Tiles */}
           <div style={{ display: 'flex', gap: '6px' }}>
             {forecast.map((f, i) => (
               <div key={i} className="glass-tile" style={{ flex: 1, padding: '10px 2px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -198,7 +203,7 @@ function App() {
             ))}
           </div>
 
-          {/* Τώρα όλες οι κάρτες έχουν την ίδια κλάση glass-tile και κανένα έξτρα χρώμα στο φόντο */}
+          {/* Details - Single Color Grid Tiles */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
             <DetailTile label="ΑΙΣΘΗΣΗ" icon="thermostat" value={`${Math.round(weather.main.feels_like)}°`} color="#E57373" />
             <DetailTile label="ΥΓΡΑΣΙΑ" icon="water_drop" value={`${weather.main.humidity}%`} color="#4FC3F7" />
