@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 
 function App() {
@@ -15,10 +14,10 @@ function App() {
 
   const API_KEY = "8e870e1f59cadca07199db1d225e0dec";
 
-  // ΕΠΑΝΑΦΟΡΑ: Φιλτράρισμα ιστορικού βάσει πληκτρολόγησης
-  const filteredHistory = history.filter(item => 
-    item.toLowerCase().startsWith(city.toLowerCase())
-  );
+  // ΔΙΟΡΘΩΣΗ: Δείχνει όλο το ιστορικό αν είναι κενό το input, αλλιώς φιλτράρει
+  const filteredHistory = city.trim() === "" 
+    ? history 
+    : history.filter(item => item.toLowerCase().startsWith(city.toLowerCase()));
 
   useEffect(() => {
     localStorage.setItem("weatherHistory", JSON.stringify(history));
@@ -94,20 +93,16 @@ function App() {
       <style>
         {`
           * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-          
           .glass-tile {
             background: #5d6d7e !important; 
             border-radius: 22px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
           }
-
           .search-wrapper {
             background: white; border-radius: 50px; padding: 4px;
             display: flex; align-items: center; width: 100%; max-width: 380px;
             margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-            position: relative; z-index: 100;
-            flex-wrap: nowrap;
+            position: relative; z-index: 100; flex-wrap: nowrap;
           }
           .search-input {
             flex: 1; border: none; outline: none; padding: 10px 15px;
@@ -176,7 +171,7 @@ function App() {
               {city && <span style={{color:'#888', cursor:'pointer', padding:'0 8px'}} onClick={() => setCity("")}>✕</span>}
               <button className="search-btn" onClick={() => getWeather()}>ΑΝΑΖΗΤΗΣΗ</button>
 
-              {/* Εδώ εμφανίζεται το φιλτραρισμένο ιστορικό */}
+              {/* Εδώ εμφανίζεται το ιστορικό - είτε όλο είτε φιλτραρισμένο */}
               {showHistory && filteredHistory.length > 0 && (
                 <div className="history-dropdown">
                   {filteredHistory.map((item, index) => (
@@ -209,7 +204,6 @@ function App() {
             <DetailTile label="ΔΥΣΗ" icon="wb_twilight" value={new Date(weather.sys.sunset * 1000).toLocaleTimeString('el-GR', {hour:'2-digit', minute:'2-digit'})} color="#F06292" />
             <DetailTile label="ΠΙΕΣΗ" icon="speed" value={weather.main.pressure} color="#AED581" />
           </div>
-
         </div>
       )}
     </div>
@@ -218,12 +212,7 @@ function App() {
 
 function DetailTile({ label, icon, value, color }) {
   return (
-    <div className="glass-tile" style={{ 
-      padding: '15px 2px', 
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center'
-    }}>
+    <div className="glass-tile" style={{ padding: '15px 2px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <span className="material-icons-round" style={{ color: color, fontSize: '22px', marginBottom: '4px' }}>{icon}</span>
       <div style={{ fontSize: '0.55rem', fontWeight: '800', marginBottom: '2px', opacity: 0.85 }}>{label}</div>
       <div style={{ fontSize: '0.95rem', fontWeight: '800' }}>{value}</div>
