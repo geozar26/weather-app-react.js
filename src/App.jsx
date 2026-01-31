@@ -14,7 +14,6 @@ function App() {
 
   const API_KEY = "8e870e1f59cadca07199db1d225e0dec";
 
-  // Φιλτράρισμα ιστορικού με βάση το τι γράφει ο χρήστης
   const filteredHistory = history.filter(item => 
     item.toLowerCase().startsWith(city.toLowerCase())
   );
@@ -86,9 +85,9 @@ function App() {
     <div style={{ 
       minHeight: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', 
       alignItems: 'center', justifyContent: 'flex-start', color: 'white', 
-      padding: '40px 15px 150px 15px', 
+      padding: '30px 15px 120px 15px', 
       boxSizing: 'border-box',
-      background: getBackground(), transition: 'background 1s ease', overflowX: 'hidden'
+      background: getBackground(), transition: 'background 1s ease', overflowY: 'auto'
     }}>
       
       <style>
@@ -109,7 +108,7 @@ function App() {
           }
           .search-input {
             flex: 1; border: none; outline: none; padding: 10px 18px;
-            font-size: 1rem; color: #111; background: transparent; min-width: 0;
+            font-size: 1rem; color: #111; background: transparent;
           }
           .search-btn {
             background: black; color: white; border: none; padding: 10px 20px;
@@ -117,7 +116,7 @@ function App() {
             font-size: 0.7rem; white-space: nowrap; flex-shrink: 0;
           }
           .history-dropdown {
-            position: absolute; top: calc(100% + 10px); left: 0; right: 0;
+            position: absolute; top: calc(100% + 8px); left: 0; right: 0;
             background: white; border-radius: 20px; overflow: hidden;
             box-shadow: 0 15px 35px rgba(0,0,0,0.3); z-index: 99;
           }
@@ -133,24 +132,27 @@ function App() {
       </style>
 
       {weather && (
-        <div className="intense-text" style={{ textAlign: 'center', width: '100%', maxWidth: '450px', display: 'flex', flexDirection: 'column', gap: '30px' }}>
+        <div className="intense-text" style={{ 
+          textAlign: 'center', width: '100%', maxWidth: '450px', 
+          display: 'flex', flexDirection: 'column', gap: '22px' // Μειωμένο gap συνολικά
+        }}>
           
           {/* Main Weather */}
           <div>
-            <div style={{ fontSize: '1.2rem', fontWeight: '700', opacity: 0.9 }}>
+            <div style={{ fontSize: '1.1rem', fontWeight: '700', opacity: 0.9 }}>
               {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px' }}>
-              <div style={{ fontSize: '5.5rem', fontWeight: '900', lineHeight: 1 }}>{Math.round(weather.main.temp)}°</div>
-              <h1 style={{ fontSize: '3.2rem', fontWeight: '900', margin: 0 }}>{weather.name}</h1>
+              <div style={{ fontSize: '5rem', fontWeight: '900', lineHeight: 1 }}>{Math.round(weather.main.temp)}°</div>
+              <h1 style={{ fontSize: '3rem', fontWeight: '900', margin: 0 }}>{weather.name}</h1>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img style={{ width: '85px' }} src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon" />
-              <div style={{ fontSize: '1.4rem', fontWeight: '700', textTransform: 'capitalize' }}>{weather.weather[0].description}</div>
+              <img style={{ width: '80px' }} src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon" />
+              <div style={{ fontSize: '1.3rem', fontWeight: '700', textTransform: 'capitalize' }}>{weather.weather[0].description}</div>
             </div>
           </div>
 
-          {/* Search Section with Dynamic History Filtering */}
+          {/* Search Section */}
           <div style={{ position: 'relative', width: '100%' }} ref={dropdownRef}>
             <div className="search-wrapper">
               <input 
@@ -165,7 +167,6 @@ function App() {
               {city && <span className="close-icon-gray" onClick={() => setCity("")}>✕</span>}
               <button className="search-btn" onClick={() => getWeather()}>ΑΝΑΖΗΤΗΣΗ</button>
 
-              {/* Εμφάνιση dropdown μόνο αν υπάρχουν αποτελέσματα που ταιριάζουν με το γράμμα που πατήθηκε */}
               {showHistory && filteredHistory.length > 0 && (
                 <div className="history-dropdown">
                   {filteredHistory.map((item, index) => (
@@ -177,22 +178,27 @@ function App() {
                 </div>
               )}
             </div>
-            {error && <div style={{ color: '#FFD700', fontWeight: '700', marginTop: '10px' }}>{error}</div>}
+            {error && <div style={{ color: '#FFD700', fontWeight: '700', marginTop: '5px' }}>{error}</div>}
           </div>
 
           {/* 5-Day Forecast */}
           <div style={{ display: 'flex', gap: '8px' }}>
             {forecast.map((f, i) => (
-              <div key={i} className="glass-tile" style={{ flex: 1, padding: '15px 2px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div key={i} className="glass-tile" style={{ flex: 1, padding: '12px 2px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <div style={{ fontSize: '0.65rem', fontWeight: '800' }}>{new Date(f.dt_txt).toLocaleDateString('el-GR', {weekday: 'short'}).toUpperCase()}</div>
-                <img style={{ width: '38px' }} src={`https://openweathermap.org/img/wn/${f.weather[0].icon}.png`} alt="icon" />
-                <div style={{ fontWeight: '900', fontSize: '1.1rem' }}>{Math.round(f.main.temp)}°</div>
+                <img style={{ width: '35px' }} src={`https://openweathermap.org/img/wn/${f.weather[0].icon}.png`} alt="icon" />
+                <div style={{ fontWeight: '900', fontSize: '1rem' }}>{Math.round(f.main.temp)}°</div>
               </div>
             ))}
           </div>
 
-          {/* Details Grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+          {/* Details Grid - Μετακινήθηκε ελαφρώς πιο πάνω λόγω μικρότερου gap */}
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(3, 1fr)', 
+            gap: '8px', 
+            marginTop: '-5px' // "Τραβάει" το grid λίγο πιο πάνω
+          }}>
             <DetailTile label="ΑΙΣΘΗΣΗ" icon="thermostat" value={`${Math.round(weather.main.feels_like)}°`} color="#E57373" />
             <DetailTile label="ΥΓΡΑΣΙΑ" icon="water_drop" value={`${weather.main.humidity}%`} color="#64B5F6" />
             <DetailTile label="ΑΝΕΜΟΣ" icon="air" value={`${Math.round(weather.wind.speed)}m/s`} color="#81C784" />
@@ -201,7 +207,8 @@ function App() {
             <DetailTile label="ΠΙΕΣΗ" icon="speed" value={weather.main.pressure} color="#AED581" />
           </div>
 
-          <div style={{ height: '50px' }}></div>
+          {/* Σημαντικό κενό στο τέλος για να υπάρχει περιθώριο κάτω */}
+          <div style={{ height: '80px' }}></div>
         </div>
       )}
     </div>
@@ -210,10 +217,10 @@ function App() {
 
 function DetailTile({ label, icon, value, color }) {
   return (
-    <div className="glass-tile" style={{ padding: '20px 5px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <span className="material-icons-round" style={{ color: color, fontSize: '26px', marginBottom: '8px' }}>{icon}</span>
-      <div style={{ fontSize: '0.6rem', fontWeight: '800', marginBottom: '2px', opacity: 0.85 }}>{label}</div>
-      <div style={{ fontSize: '1.1rem', fontWeight: '800' }}>{value}</div>
+    <div className="glass-tile" style={{ padding: '15px 5px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <span className="material-icons-round" style={{ color: color, fontSize: '24px', marginBottom: '4px' }}>{icon}</span>
+      <div style={{ fontSize: '0.55rem', fontWeight: '800', marginBottom: '2px', opacity: 0.85 }}>{label}</div>
+      <div style={{ fontSize: '1rem', fontWeight: '800' }}>{value}</div>
     </div>
   );
 }
