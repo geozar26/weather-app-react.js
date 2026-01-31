@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 
 function App() {
@@ -93,15 +94,12 @@ function App() {
         {`
           * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
           
-          /* ΕΔΩ ΕΓΙΝΕ Η ΔΙΟΡΘΩΣΗ ΓΙΑ ΤΗ ΔΙΧΡΩΜΙΑ */
+          /* ΔΙΟΡΘΩΣΗ: Χρήση σταθερού χρώματος για εξάλειψη διχρωμίας */
           .glass-tile {
-            background-color: rgba(255, 255, 255, 0.22) !important; /* Force solid color */
-            background-image: none !important; /* Remove any potential gradients */
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: #5d6d7e !important; /* Σταθερό χρώμα που δεν επηρεάζεται από το background */
             border-radius: 22px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: none !important; /* Remove inner shadows that look like dual color */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
           }
 
           .search-wrapper {
@@ -192,7 +190,6 @@ function App() {
             {error && <div style={{ color: '#FFD700', fontWeight: '700', marginTop: '5px', fontSize: '0.8rem' }}>{error}</div>}
           </div>
 
-          {/* Forecast - Single Color Tiles */}
           <div style={{ display: 'flex', gap: '6px' }}>
             {forecast.map((f, i) => (
               <div key={i} className="glass-tile" style={{ flex: 1, padding: '10px 2px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -203,7 +200,6 @@ function App() {
             ))}
           </div>
 
-          {/* Details - Single Color Grid Tiles */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
             <DetailTile label="ΑΙΣΘΗΣΗ" icon="thermostat" value={`${Math.round(weather.main.feels_like)}°`} color="#E57373" />
             <DetailTile label="ΥΓΡΑΣΙΑ" icon="water_drop" value={`${weather.main.humidity}%`} color="#4FC3F7" />
