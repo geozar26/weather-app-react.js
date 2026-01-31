@@ -4,7 +4,7 @@ function App() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
-  const [error, setError] = useState(""); // State για το μήνυμα λάθους
+  const [error, setError] = useState("");
   const [history, setHistory] = useState(() => {
     const saved = localStorage.getItem("weatherHistory");
     return saved ? JSON.parse(saved) : ["Πάτρα", "Παρίσι", "Χανιά"];
@@ -27,12 +27,12 @@ function App() {
 
   const getWeather = async (cityName = city) => {
     if (!cityName) return;
-    setError(""); // Καθαρισμός λάθους πριν την αναζήτηση
+    setError("");
     try {
       const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cityName)}&appid=${API_KEY}&units=metric&lang=el`);
       
       if (!response.ok) {
-        setError("Η περιοχή δεν βρέθηκε!"); // Ενεργοποίηση λάθους
+        setError("Η περιοχή δεν βρέθηκε. Δοκιμάστε ξανά.");
         return;
       }
 
@@ -45,8 +45,7 @@ function App() {
       setCity(""); 
       setHistory(prev => [data.name, ...prev.filter(c => c !== data.name)].slice(0, 10));
     } catch (err) { 
-      console.error(err);
-      setError("Πρόβλημα σύνδεσης");
+      setError("Πρόβλημα σύνδεσης με την υπηρεσία.");
     }
   };
 
@@ -76,6 +75,13 @@ function App() {
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+          }
+          /* Hover effect για τις κάρτες */
+          .glass-tile:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
           }
           .search-wrapper {
             background: white; border-radius: 50px; padding: 4px;
@@ -89,22 +95,24 @@ function App() {
           .search-btn {
             background: black; color: white; border: none; padding: 8px 18px;
             border-radius: 50px; font-weight: 800; cursor: pointer;
-            font-size: 0.75rem; white-space: nowrap;
+            font-size: 0.75rem; white-space: nowrap; transition: 0.2s;
           }
+          .search-btn:hover { background: #333; }
           .intense-text { text-shadow: 0 3px 12px rgba(0,0,0,0.45); }
           .mi-icon { font-family: 'Material Icons Round'; font-size: 26px; }
           .weather-icon-main { filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2)); width: 85px; }
           .weather-icon-small { filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3)); width: 38px; }
           
           .error-text {
-            color: #FFEA00;
-            font-weight: 800;
-            font-size: 0.95rem;
-            margin-top: 8px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            animation: fadeIn 0.3s ease;
+            color: #FFC107; /* Premium Amber Gold */
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            letter-spacing: 0.3px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
           }
-          @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+          @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         `}
       </style>
 
@@ -136,7 +144,6 @@ function App() {
             </div>
           </div>
 
-          {/* Search Area */}
           <div style={{ position: 'relative' }}>
             <div className="search-wrapper">
               <input 
@@ -145,13 +152,11 @@ function App() {
                 placeholder="Αναζήτηση πόλης..." 
                 value={city} 
                 onChange={(e) => { setCity(e.target.value); setError(""); }} 
-                onKeyDown={(e) => e.key === "Enter" && getWeather()} 
+                onKeyDown={(e) => { if (e.key === "Enter") getWeather(); }} 
               />
               {city && <span style={{ color: '#888', cursor: 'pointer', padding: '0 10px' }} onClick={() => setCity("")}>✕</span>}
               <button className="search-btn" onClick={() => getWeather()}>ΑΝΑΖΗΤΗΣΗ</button>
             </div>
-            
-            {/* Το κίτρινο κείμενο λάθους */}
             {error && <div className="error-text">{error}</div>}
           </div>
 
