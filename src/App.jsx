@@ -84,10 +84,10 @@ function App() {
   return (
     <div style={{ 
       minHeight: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', 
-      alignItems: 'center', justifyContent: 'flex-start', color: 'white', 
-      padding: '30px 15px 120px 15px', 
+      alignItems: 'center', justifyContent: 'center', color: 'white', // Κεντράρισμα κατακόρυφα
+      padding: '20px 15px', 
       boxSizing: 'border-box',
-      background: getBackground(), transition: 'background 1s ease', overflowY: 'auto'
+      background: getBackground(), transition: 'background 1s ease', overflowX: 'hidden'
     }}>
       
       <style>
@@ -114,7 +114,11 @@ function App() {
             background: black; color: white; border: none; padding: 10px 20px;
             border-radius: 50px; font-weight: 800; cursor: pointer;
             font-size: 0.7rem; white-space: nowrap; flex-shrink: 0;
+            transition: transform 0.2s ease;
           }
+          .search-btn:hover { transform: scale(1.08); }
+          .search-btn:active { transform: scale(0.95); }
+
           .history-dropdown {
             position: absolute; top: calc(100% + 8px); left: 0; right: 0;
             background: white; border-radius: 20px; overflow: hidden;
@@ -126,7 +130,19 @@ function App() {
             font-weight: 600;
           }
           .history-item:hover { background: #f8f8f8; }
-          .close-icon-gray { color: #888; cursor: pointer; padding: 0 10px; font-size: 1.1rem; }
+          
+          .close-icon-history { 
+            color: #888; cursor: pointer; padding: 5px 10px; font-size: 1.1rem;
+            transition: transform 0.2s ease, color 0.2s ease;
+          }
+          .close-icon-history:hover { transform: scale(1.3); color: #333; }
+
+          .close-icon-input {
+            color: #888; cursor: pointer; padding: 0 10px; font-size: 1.1rem;
+            transition: transform 0.2s ease;
+          }
+          .close-icon-input:hover { transform: scale(1.2); }
+
           .intense-text { text-shadow: 0 3px 12px rgba(0,0,0,0.4); }
         `}
       </style>
@@ -134,7 +150,7 @@ function App() {
       {weather && (
         <div className="intense-text" style={{ 
           textAlign: 'center', width: '100%', maxWidth: '450px', 
-          display: 'flex', flexDirection: 'column', gap: '22px' // Μειωμένο gap συνολικά
+          display: 'flex', flexDirection: 'column', gap: '22px' 
         }}>
           
           {/* Main Weather */}
@@ -164,7 +180,7 @@ function App() {
                 onChange={(e) => { setCity(e.target.value); setError(""); setShowHistory(true); }} 
                 onKeyDown={(e) => { if (e.key === "Enter") getWeather(); }} 
               />
-              {city && <span className="close-icon-gray" onClick={() => setCity("")}>✕</span>}
+              {city && <span className="close-icon-input" onClick={() => setCity("")}>✕</span>}
               <button className="search-btn" onClick={() => getWeather()}>ΑΝΑΖΗΤΗΣΗ</button>
 
               {showHistory && filteredHistory.length > 0 && (
@@ -172,7 +188,7 @@ function App() {
                   {filteredHistory.map((item, index) => (
                     <div key={index} className="history-item" onClick={() => getWeather(item)}>
                       <span>{item}</span>
-                      <span className="close-icon-gray" style={{fontSize: '0.9rem'}} onClick={(e) => removeHistoryItem(e, item)}>✕</span>
+                      <span className="close-icon-history" onClick={(e) => removeHistoryItem(e, item)}>✕</span>
                     </div>
                   ))}
                 </div>
@@ -192,12 +208,12 @@ function App() {
             ))}
           </div>
 
-          {/* Details Grid - Μετακινήθηκε ελαφρώς πιο πάνω λόγω μικρότερου gap */}
+          {/* Details Grid */}
           <div style={{ 
             display: 'grid', 
             gridTemplateColumns: 'repeat(3, 1fr)', 
             gap: '8px', 
-            marginTop: '-5px' // "Τραβάει" το grid λίγο πιο πάνω
+            marginTop: '-5px' 
           }}>
             <DetailTile label="ΑΙΣΘΗΣΗ" icon="thermostat" value={`${Math.round(weather.main.feels_like)}°`} color="#E57373" />
             <DetailTile label="ΥΓΡΑΣΙΑ" icon="water_drop" value={`${weather.main.humidity}%`} color="#64B5F6" />
@@ -207,8 +223,6 @@ function App() {
             <DetailTile label="ΠΙΕΣΗ" icon="speed" value={weather.main.pressure} color="#AED581" />
           </div>
 
-          {/* Σημαντικό κενό στο τέλος για να υπάρχει περιθώριο κάτω */}
-          <div style={{ height: '80px' }}></div>
         </div>
       )}
     </div>
