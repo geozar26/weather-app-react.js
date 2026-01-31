@@ -15,6 +15,7 @@ function App() {
 
   const API_KEY = "8e870e1f59cadca07199db1d225e0dec";
 
+  // ΕΠΑΝΑΦΟΡΑ: Φιλτράρισμα ιστορικού βάσει πληκτρολόγησης
   const filteredHistory = history.filter(item => 
     item.toLowerCase().startsWith(city.toLowerCase())
   );
@@ -51,12 +52,12 @@ function App() {
     setError("");
     setShowHistory(false);
     try {
-      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cityName)}&appid=8e870e1f59cadca07199db1d225e0dec&units=metric&lang=el`);
+      const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(cityName)}&appid=${API_KEY}&units=metric&lang=el`);
       if (!response.ok) {
         setError("Η περιοχή δεν βρέθηκε.");
         return;
       }
-      const fResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(cityName)}&appid=8e870e1f59cadca07199db1d225e0dec&units=metric&lang=el`);
+      const fResponse = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(cityName)}&appid=${API_KEY}&units=metric&lang=el`);
       const data = await response.json();
       const fData = await fResponse.json();
 
@@ -94,9 +95,8 @@ function App() {
         {`
           * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
           
-          /* ΔΙΟΡΘΩΣΗ: Χρήση σταθερού χρώματος για εξάλειψη διχρωμίας */
           .glass-tile {
-            background: #5d6d7e !important; /* Σταθερό χρώμα που δεν επηρεάζεται από το background */
+            background: #5d6d7e !important; 
             border-radius: 22px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -176,6 +176,7 @@ function App() {
               {city && <span style={{color:'#888', cursor:'pointer', padding:'0 8px'}} onClick={() => setCity("")}>✕</span>}
               <button className="search-btn" onClick={() => getWeather()}>ΑΝΑΖΗΤΗΣΗ</button>
 
+              {/* Εδώ εμφανίζεται το φιλτραρισμένο ιστορικό */}
               {showHistory && filteredHistory.length > 0 && (
                 <div className="history-dropdown">
                   {filteredHistory.map((item, index) => (
