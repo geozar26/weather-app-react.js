@@ -70,12 +70,12 @@ function App() {
         {`
           * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
           .glass-tile {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.22);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
           }
           .search-wrapper {
             background: white; border-radius: 50px; padding: 4px;
@@ -87,18 +87,17 @@ function App() {
             font-size: 0.95rem; color: #111; background: transparent;
           }
           .search-btn {
-            background: #000; color: #fff; border: none; padding: 8px 20px;
+            background: black; color: white; border: none; padding: 8px 18px;
             border-radius: 50px; font-weight: 800; cursor: pointer;
-            font-size: 0.75rem; transition: transform 0.2s;
+            font-size: 0.75rem; white-space: nowrap;
           }
-          .search-btn:active { transform: scale(0.95); }
           .intense-text {
-            text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            text-shadow: 0 3px 12px rgba(0,0,0,0.4);
           }
           .mi-icon { font-family: 'Material Icons Round'; font-size: 26px; }
-          .weather-icon-main { width: 80px; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2)); }
-          .weather-icon-small { width: 40px; }
-          
+          .weather-icon-main { filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2)); width: 85px; margin-bottom: -10px; }
+          .weather-icon-small { filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3)); width: 38px; }
+
           @media (max-width: 399px) {
             .main-temp { font-size: 4.5rem !important; }
             .city-name { font-size: 2.5rem !important; }
@@ -109,38 +108,43 @@ function App() {
       {weather && (
         <div className="intense-text" style={{ 
           textAlign: 'center', width: '100%', maxWidth: '450px', 
-          display: 'flex', flexDirection: 'column', gap: '25px', paddingTop: '40px' 
+          display: 'flex', flexDirection: 'column', gap: '20px', paddingTop: '50px' 
         }}>
           
-          {/* Header Info */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ fontSize: '1.2rem', fontWeight: '700', opacity: 0.9, marginBottom: '5px' }}>
-              {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
+          {/* Ημερομηνία */}
+          <div style={{ fontSize: '1.2rem', fontWeight: '700', opacity: 0.95 }}>
+            {new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long' })}
+          </div>
+
+          {/* GRID: Σπασμένο σε 2 Στήλες */}
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: '1fr 1fr', 
+            alignItems: 'start', 
+            columnGap: '10px',
+            justifyItems: 'center'
+          }}>
+            
+            {/* Στήλη 1: Θερμοκρασία και ακριβώς κάτω Icon + Περιγραφή */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div className="main-temp" style={{ fontSize: '5.5rem', fontWeight: '900', lineHeight: 1 }}>
+                {Math.round(weather.main.temp)}°
+              </div>
+              <img className="weather-icon-main" src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon" />
+              <div style={{ fontSize: '1.2rem', fontWeight: '800', textTransform: 'capitalize', marginTop: '0px' }}>
+                {weather.weather[0].description}
+              </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', alignItems: 'center', columnGap: '15px' }}>
-              {/* Στήλη 1: Θερμοκρασία και από κάτω εικονίδιο-κείμενο */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div className="main-temp" style={{ fontSize: '5.8rem', fontWeight: '900', lineHeight: 0.9 }}>
-                  {Math.round(weather.main.temp)}°
-                </div>
-                {/* Το κείμενο και το εικονίδιο ξανά κοντά */}
-                <div style={{ display: 'flex', alignItems: 'center', marginTop: '5px' }}>
-                  <img className="weather-icon-main" src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`} alt="icon" />
-                  <div style={{ fontSize: '1.3rem', fontWeight: '800', textTransform: 'capitalize', marginLeft: '-5px' }}>
-                    {weather.weather[0].description}
-                  </div>
-                </div>
-              </div>
-
-              {/* Στήλη 2: Όνομα Πόλης */}
-              <h1 className="city-name" style={{ fontSize: '3.2rem', fontWeight: '900', margin: 0, textAlign: 'left', lineHeight: 1 }}>
+            {/* Στήλη 2: Όνομα Πόλης */}
+            <div style={{ alignSelf: 'center' }}>
+              <h1 className="city-name" style={{ fontSize: '3rem', margin: 0, fontWeight: '900', lineHeight: 1.1, textAlign: 'left' }}>
                 {weather.name}
               </h1>
             </div>
           </div>
 
-          {/* Search Box */}
+          {/* Search Input */}
           <div className="search-wrapper">
             <input className="search-input" type="text" placeholder="Αναζήτηση πόλης..." value={city} 
               onChange={(e) => setCity(e.target.value)} 
@@ -150,10 +154,10 @@ function App() {
           </div>
 
           {/* 5-Day Forecast */}
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ display: 'flex', gap: '6px' }}>
             {forecast.map((f, i) => (
-              <div key={i} className="glass-tile" style={{ flex: 1, padding: '12px 5px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ fontSize: '0.7rem', fontWeight: '900' }}>{new Date(f.dt_txt).toLocaleDateString('el-GR', {weekday: 'short'}).toUpperCase()}</div>
+              <div key={i} className="glass-tile" style={{ flex: 1, padding: '10px 2px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: '900' }}>{new Date(f.dt_txt).toLocaleDateString('el-GR', {weekday: 'short'}).toUpperCase()}</div>
                 <img className="weather-icon-small" src={`https://openweathermap.org/img/wn/${f.weather[0].icon}.png`} alt="icon" />
                 <div style={{ fontWeight: '900', fontSize: '1.1rem' }}>{Math.round(f.main.temp)}°</div>
               </div>
@@ -161,7 +165,7 @@ function App() {
           </div>
 
           {/* Details Grid με Premium Χρώματα */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
             <DetailTile label="ΑΙΣΘΗΣΗ" icon="thermostat" value={`${Math.round(weather.main.feels_like)}°`} color="#FF5252" />
             <DetailTile label="ΥΓΡΑΣΙΑ" icon="water_drop" value={`${weather.main.humidity}%`} color="#40C4FF" />
             <DetailTile label="ΑΝΕΜΟΣ" icon="air" value={`${Math.round(weather.wind.speed)}m/s`} color="#69F0AE" />
@@ -178,9 +182,9 @@ function App() {
 
 function DetailTile({ label, icon, value, color }) {
   return (
-    <div className="glass-tile" style={{ padding: '15px 5px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <span className="mi-icon" style={{ color: color, marginBottom: '5px', filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}>{icon}</span>
-      <div style={{ fontSize: '0.65rem', fontWeight: '900', opacity: 0.8, marginBottom: '2px' }}>{label}</div>
+    <div className="glass-tile" style={{ padding: '12px 4px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <span className="mi-icon" style={{ color: color, textShadow: '0 2px 5px rgba(0,0,0,0.2)' }}>{icon}</span>
+      <div style={{ fontSize: '0.65rem', fontWeight: '900', marginBottom: '2px', opacity: 0.8 }}>{label}</div>
       <div style={{ fontSize: '1.1rem', fontWeight: '900' }}>{value}</div>
     </div>
   );
