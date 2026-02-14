@@ -1,0 +1,86 @@
+:root {
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  margin: 0 ;
+  padding: 0 ;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+.app {
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+  padding: 40px 20px; 
+  box-sizing: border-box; /* Για να μην ξεχειλίζει η μπάρα */
+  text-align: center;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  background-color: white; /* Το λευκό φόντο πάει στο container */
+  padding: 5px;            /* Αυτό δημιουργεί το ομοιόμορφο κενό γύρω από το κουμπί */
+  border-radius: 50px;     /* Τέλεια στρογγυλάδα */
+  width: 100%;
+  max-width: 450px;
+  margin: 20px auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Μια μικρή σκιά για βάθος */
+}
+
+.search input {
+  flex: 1;                 /* Παίρνει όλο τον διαθέσιμο χώρο */
+  border: none;
+  outline: none;
+  background: transparent; /* Διάφανο για να φαίνεται το λευκό του .search */
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #333;
+}
+
+.search button {
+  background-color: #333;  /* Το σκούρο χρώμα από το βίντεό σου */
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 50px;     /* Στρογγυλεμένο κουμπί μέσα στο στρογγυλεμένο input */
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.search button:hover {
+  background-color: #000;
+  transform: scale(1.02);  /* Μικρό εφέ μεγέθυνσης */
+}
+
+.search button:hover {
+  background-color: #000;
+}
+/* Η κάρτα του καιρού */
+.weather-card {
+  margin-top: 30px;
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.error {
+  color: red;
+  margin-top: 20px;
+}
