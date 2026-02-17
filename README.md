@@ -1,16 +1,43 @@
-# React + Vite
+Modern Weather Dashboard
+A sleek, dynamic weather application built with React.js. This dashboard provides real-time weather data, a 5-day forecast, and an immersive user experience with dynamic backgrounds that adapt to current weather conditions.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ Key Features
+ Real-Time Data: Fetches up-to-the-minute weather information via OpenWeather API.
 
-Currently, two official plugins are available:
+ Dynamic UI: The interface background changes dynamically based on weather conditions (e.g., Clear, Clouds, Rain, Snow).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+ Smart Time Tracking: Calculates and displays the accurate local time of the searched city using timezone offsets.
 
-## React Compiler
+ 5-Day Forecast: Displays a concise mid-day forecast for the upcoming week.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+ Search History: Remembers your recently searched cities using localStorage for quick access.
 
-## Expanding the ESLint configuration
+ Fully Responsive: Optimized for all screen sizes with a modern Glassmorphism design.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+ Robust Error Handling: Provides user feedback for "City not found" or connection issues.
+
+ Tech Stack
+Frontend: React.js (Hooks: useState, useEffect, useRef)
+
+Styling: CSS-in-JS & Glassmorphism techniques
+
+API: OpenWeatherMap API
+
+Icons: Material Design Icons
+
+ Installation & Setup
+Clone the repository:
+
+Bash
+git clone https://github.com/geozar26/weather-app-react.js.git
+Install dependencies:
+
+Bash
+npm install
+API Key:
+The project uses the OpenWeatherMap API. Replace the API_KEY variable in App.js with your own key from OpenWeatherMap.
+
+Run the app:
+
+Bash
+npm start
