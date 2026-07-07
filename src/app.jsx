@@ -551,19 +551,19 @@ function App() {
           line-height: 1.2;
         }
 
-        @media (max-width: 1180px) {
-          .top-grid {
-            grid-template-columns: 1fr;
-          }
+      @media (max-width: 980px) {
+  .top-grid {
+    grid-template-columns: 1fr;
+  }
 
-          .side-panel {
-            min-height: auto;
-          }
+  .side-panel {
+    min-height: auto;
+  }
 
-          .detail-grid {
-            grid-template-columns: repeat(3, 1fr);
-          }
-        }
+  .detail-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
 
         @media (max-width: 860px) {
           .forecast-grid {
