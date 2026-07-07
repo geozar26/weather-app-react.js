@@ -120,7 +120,6 @@ function App() {
         .tile-icon { visibility: hidden; }
         .tile-icon.ready { visibility: visible !important; }
 
-        /* Hamburger button styles */
         .hamburger-btn {
           background: transparent;
           border: none;
@@ -136,7 +135,6 @@ function App() {
           color: #000;
         }
 
-        /* Ρυθμισμένο στα 768px για κινητά και μικρές οθόνες */
         @media (max-width: 768px) {
           .hamburger-btn { display: flex; }
         }
@@ -163,7 +161,6 @@ function App() {
 
           <div className="search-container" ref={dropdownRef}>
             <div className="search-wrapper">
-              {/* ΔΙΟΡΘΩΣΗ: Αλλαγή του εικονιδίου σε 'dehaze' για να εμφανιστεί σωστά */}
               <button className="hamburger-btn" onClick={() => setShowHistory(!showHistory)}>
                 <span className="material-icons" style={{ fontSize: '24px' }}>dehaze</span>
               </button>
