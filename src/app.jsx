@@ -122,23 +122,18 @@ function App() {
 
         /* Hamburger button styles */
         .hamburger-btn {
-          position: absolute;
-          top: 20px;
-          left: 20px;
-          background: rgba(255, 255, 255, 0.2);
-          border: 1px solid rgba(255, 255, 255, 0.3);
-          color: white;
-          padding: 8px;
-          border-radius: 50%;
+          background: transparent;
+          border: none;
+          color: #666;
+          padding: 0 4px 0 12px;
           cursor: pointer;
           display: none;
           align-items: center;
           justify-content: center;
-          z-index: 4000;
-          transition: background 0.2s ease;
+          transition: color 0.2s ease;
         }
         .hamburger-btn:hover {
-          background: rgba(255, 255, 255, 0.3);
+          color: #000;
         }
 
         @media (max-width: 768px) {
@@ -147,11 +142,6 @@ function App() {
 
         @media (max-width: 400px) { .detail-grid { grid-template-columns: repeat(2, 1fr) !important; } }
       `}</style>
-
-      {/* Hamburger Button μόνο για <= 768px στα αριστερά */}
-      <button className="hamburger-btn" onClick={() => setShowHistory(!showHistory)}>
-        <span className="material-icons" style={{ fontSize: '24px' }}>menu</span>
-      </button>
 
       {weather && (
         <div style={{ textAlign: 'center', width: '100%', maxWidth: '450px', display: 'flex', flexDirection: 'column', gap: '20px', padding: '20px' }}>
@@ -172,6 +162,11 @@ function App() {
 
           <div className="search-container" ref={dropdownRef}>
             <div className="search-wrapper">
+              {/* Hamburger Button: Εμφανίζεται αριστερά στο input μόνο σε mobile/tablet */}
+              <button className="hamburger-btn" onClick={() => setShowHistory(!showHistory)}>
+                <span className="material-icons" style={{ fontSize: '24px' }}>menu</span>
+              </button>
+              
               <input 
                 className="search-input" 
                 placeholder="ΑΝΑΖΗΤΗΣΗ..." 
@@ -180,7 +175,7 @@ function App() {
                 onChange={(e) => {
                   const val = e.target.value;
                   setCity(val);
-                  if (val === "") setError(""); // Εξαφανίζεται ΜΟΝΟ όταν σβηστούν όλα
+                  if (val === "") setError(""); 
                 }} 
                 onKeyDown={(e) => e.key === "Enter" && getWeather(city)} 
               />
