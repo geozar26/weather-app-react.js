@@ -136,7 +136,8 @@ function App() {
           color: #000;
         }
 
-        @media (max-width: 768px) {
+        /* Ρυθμισμένο στα 1920px για να το βλέπεις τώρα στην οθόνη σου. Το γυρνάς σε 768px για κινητά */
+        @media (max-width: 1920px) {
           .hamburger-btn { display: flex; }
         }
 
@@ -162,9 +163,9 @@ function App() {
 
           <div className="search-container" ref={dropdownRef}>
             <div className="search-wrapper">
-              {/* Hamburger Button: Εμφανίζεται αριστερά στο input μόνο σε mobile/tablet */}
+              {/* ΔΙΟΡΘΩΣΗ: Αλλαγή του εικονιδίου σε 'dehaze' για να εμφανιστεί σωστά */}
               <button className="hamburger-btn" onClick={() => setShowHistory(!showHistory)}>
-                <span className="material-icons" style={{ fontSize: '24px' }}>menu</span>
+                <span className="material-icons" style={{ fontSize: '24px' }}>dehaze</span>
               </button>
               
               <input 
@@ -185,13 +186,17 @@ function App() {
             
             {error && <div style={{ color: '#FF8C00', fontWeight: '900', fontSize: '0.85rem', marginTop: '10px', textShadow: '0 1px 3px rgba(0,0,0,0.3)' }}>{error}</div>}
 
-            {showHistory && filteredHistory.length > 0 && (
+            {showHistory && (
               <div className="history-dropdown" style={{position:'absolute', top:'110%', left:0, right:0, background:'white', borderRadius:'20px', zIndex:3000, boxShadow:'0 10px 30px rgba(0,0,0,0.3)'}}>
-                {filteredHistory.map((h, i) => (
-                  <div key={i} className="history-item" onClick={() => getWeather(h)} style={{padding:'12px 18px', color:'#333', cursor:'pointer', display:'flex', justifyContent:'space-between', fontWeight:800, borderBottom:'1px solid #eee'}}>
-                    {h} <span className="material-icons close-icon-btn" style={{fontSize:'18px'}} onClick={(e) => { e.stopPropagation(); setHistory(prev => prev.filter(c => c !== h)); }}>close</span>
-                  </div>
-                ))}
+                {filteredHistory.length > 0 ? (
+                  filteredHistory.map((h, i) => (
+                    <div key={i} className="history-item" onClick={() => getWeather(h)} style={{padding:'12px 18px', color:'#333', cursor:'pointer', display:'flex', justifyContent:'space-between', fontWeight:800, borderBottom:'1px solid #eee'}}>
+                      {h} <span className="material-icons close-icon-btn" style={{fontSize:'18px'}} onClick={(e) => { e.stopPropagation(); setHistory(prev => prev.filter(c => c !== h)); }}>close</span>
+                    </div>
+                  ))
+                ) : (
+                  <div style={{padding:'15px 18px', color:'#999', fontWeight:800, fontSize:'0.85rem'}}>ΑΔΕΙΟ ΙΣΤΟΡΙΚΟ</div>
+                )}
               </div>
             )}
             {(formatText(weather.name) !== formatText(DEFAULT_CITY)) && (
