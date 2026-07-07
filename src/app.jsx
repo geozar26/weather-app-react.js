@@ -158,7 +158,7 @@ function App() {
         color: "white",
         background: weather ? getBg(weather.weather[0].main) : "#2c3e50",
         transition: "background 0.8s ease",
-        padding: "28px 18px",
+        padding: "32px clamp(18px, 4vw, 48px)", // Αυτόματο, αρμονικό padding ανάλογα με την οθόνη
       }}
     >
       <link
@@ -187,24 +187,25 @@ function App() {
         }
 
         .app-shell {
-          max-width: 1280px;
+          max-width: 1640px; /* ΑΥΞΗΘΗΚΕ: Απλώνεται σε όλο το πλάτος της οθόνης */
+          width: 100%;
           margin: 0 auto;
           display: flex;
           flex-direction: column;
-          gap: 22px;
+          gap: 26px;
         }
 
         .top-grid {
           display: grid;
-          grid-template-columns: 1.15fr 0.85fr;
-          gap: 22px;
+          grid-template-columns: 1fr 1.35fr; /* ΑΛΛΑΓΗ: Δίνουμε περισσότερο αέρα στο δεξί πάνελ */
+          gap: 26px;
           align-items: stretch;
         }
 
         .main-panel {
           border-radius: 30px;
-          padding: 26px;
-          min-height: 420px;
+          padding: 30px;
+          min-height: 440px;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
@@ -227,7 +228,7 @@ function App() {
         }
 
         .date-text {
-          font-size: 0.95rem;
+          font-size: 1rem;
           font-weight: 900;
           letter-spacing: 0.4px;
           text-shadow: 0 2px 5px rgba(0,0,0,0.18);
@@ -248,14 +249,14 @@ function App() {
         }
 
         .temp-big {
-          font-size: clamp(4.5rem, 9vw, 7rem);
+          font-size: clamp(4.5rem, 8vw, 7.5rem);
           font-weight: 900;
           line-height: 0.95;
           text-shadow: 0 6px 18px rgba(0,0,0,0.18);
         }
 
         .city-name-big {
-          font-size: clamp(1.8rem, 4vw, 3rem);
+          font-size: clamp(1.8rem, 3.5vw, 3.2rem);
           font-weight: 950;
           line-height: 1.1;
           text-shadow: 0 3px 10px rgba(0,0,0,0.16);
@@ -271,14 +272,14 @@ function App() {
         }
 
         .desc-text {
-          font-size: 1.2rem;
+          font-size: 1.25rem;
           font-weight: 900;
           text-shadow: 0 2px 5px rgba(0,0,0,0.16);
         }
 
         .search-area {
           width: 100%;
-          max-width: 470px;
+          max-width: 520px;
           position: relative;
           z-index: 2000;
         }
@@ -286,12 +287,12 @@ function App() {
         .search-wrapper {
           background: white;
           border-radius: 999px;
-          padding: 5px;
+          padding: 6px;
           display: flex;
           align-items: center;
           width: 100%;
           box-shadow: 0 10px 30px rgba(0,0,0,0.24);
-          min-height: 54px;
+          min-height: 56px;
         }
 
         .search-input {
@@ -301,9 +302,9 @@ function App() {
           background: transparent;
           color: #333;
           font-weight: 800;
-          padding: 0 14px;
+          padding: 0 16px;
           min-width: 0;
-          font-size: 0.95rem;
+          font-size: 1rem;
         }
 
         .search-btn {
@@ -311,11 +312,11 @@ function App() {
           color: white;
           border: none;
           min-height: 44px;
-          padding: 0 20px;
+          padding: 0 22px;
           border-radius: 999px;
           font-weight: 900;
           cursor: pointer;
-          font-size: 0.72rem;
+          font-size: 0.75rem;
           transition: transform 0.2s ease, background 0.2s ease;
           flex-shrink: 0;
         }
@@ -376,7 +377,7 @@ function App() {
         .error-text {
           color: #ffd166;
           font-weight: 900;
-          font-size: 0.9rem;
+          font-size: 0.95rem;
           margin-top: 12px;
           text-shadow: 0 1px 3px rgba(0,0,0,0.25);
         }
@@ -390,7 +391,7 @@ function App() {
           font-size: 0.78rem;
           font-weight: 900;
           cursor: pointer;
-          margin-top: 14px;
+          margin-top: 16px;
           display: inline-flex;
           align-items: center;
           gap: 8px;
@@ -408,18 +409,24 @@ function App() {
         .summary-strip {
           display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 12px;
-          margin-top: 18px;
+          gap: 14px;
+          margin-top: 22px;
         }
 
         .summary-mini-card {
           border-radius: 22px;
-          padding: 16px 14px;
-          min-height: 100px;
+          padding: 18px 16px;
+          min-height: 104px;
           display: flex;
           flex-direction: column;
           justify-content: center;
           gap: 6px;
+          transition: transform 0.25s ease, background 0.25s ease;
+        }
+
+        .summary-mini-card:hover {
+          transform: translateY(-3px);
+          background: rgba(255, 255, 255, 0.2);
         }
 
         .summary-mini-label {
@@ -430,102 +437,121 @@ function App() {
         }
 
         .summary-mini-value {
-          font-size: 1.35rem;
+          font-size: 1.4rem;
           font-weight: 950;
         }
 
         .side-panel {
           border-radius: 30px;
-          padding: 22px;
+          padding: 26px;
           display: flex;
           flex-direction: column;
-          gap: 18px;
-          min-height: 420px;
+          justify-content: space-between;
+          gap: 22px;
+          min-height: 440px;
         }
 
         .section-title {
           font-size: 1rem;
           font-weight: 950;
           letter-spacing: 0.5px;
-          margin-bottom: 4px;
+          margin-bottom: 6px;
         }
 
         .forecast-grid {
           display: grid;
-          grid-template-columns: repeat(5, 1fr);
-          gap: 10px;
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: 12px;
         }
 
         .forecast-card {
           border-radius: 22px;
-          padding: 14px 8px;
+          padding: 16px 10px;
           text-align: center;
-          min-height: 128px;
+          min-height: 136px;
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          gap: 6px;
+          gap: 8px;
+          transition: transform 0.25s ease, background 0.25s ease;
+        }
+
+        .forecast-card:hover {
+          transform: translateY(-3px);
+          background: rgba(255, 255, 255, 0.2);
         }
 
         .forecast-day {
-          font-size: 0.8rem;
+          font-size: 0.85rem;
           font-weight: 950;
         }
 
         .forecast-temp {
-          font-size: 1rem;
+          font-size: 1.05rem;
           font-weight: 950;
         }
 
         .hourly-row {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 10px;
+          grid-template-columns: repeat(8, minmax(0, 1fr)); /* ΑΛΛΑΓΗ: 8 στήλες σε μια σειρά σε Desktop! */
+          gap: 12px;
         }
 
         .hour-card {
           border-radius: 20px;
-          padding: 12px 8px;
+          padding: 14px 8px;
           text-align: center;
-          min-height: 110px;
+          min-height: 114px;
           display: flex;
           flex-direction: column;
           justify-content: center;
           gap: 6px;
           align-items: center;
+          transition: transform 0.25s ease, background 0.25s ease;
+        }
+
+        .hour-card:hover {
+          transform: translateY(-3px);
+          background: rgba(255, 255, 255, 0.2);
         }
 
         .hour-time {
-          font-size: 0.78rem;
+          font-size: 0.8rem;
           font-weight: 900;
         }
 
         .hour-temp {
-          font-size: 0.95rem;
+          font-size: 1rem;
           font-weight: 950;
         }
 
         .bottom-panel {
           border-radius: 30px;
-          padding: 22px;
+          padding: 26px;
         }
 
         .detail-grid {
           display: grid;
-          grid-template-columns: repeat(6, 1fr);
-          gap: 12px;
+          grid-template-columns: repeat(6, minmax(0, 1fr));
+          gap: 16px;
         }
 
         .detail-tile {
           border-radius: 24px;
-          padding: 18px 10px;
+          padding: 20px 12px;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          min-height: 132px;
+          min-height: 140px;
           text-align: center;
+          transition: transform 0.25s ease, background 0.25s ease;
+        }
+
+        .detail-tile:hover {
+          transform: translateY(-4px);
+          background: rgba(255, 255, 255, 0.2);
         }
 
         .tile-icon {
@@ -537,43 +563,49 @@ function App() {
         }
 
         .detail-label {
-          font-size: 0.72rem;
+          font-size: 0.75rem;
           font-weight: 950;
           color: white;
           margin-bottom: 4px;
-          margin-top: 4px;
-          letter-spacing: 0.2px;
+          margin-top: 6px;
+          letter-spacing: 0.3px;
         }
 
         .detail-value {
-          font-size: 1.05rem;
+          font-size: 1.15rem;
           font-weight: 950;
           line-height: 1.2;
         }
 
-      @media (max-width: 980px) {
-  .top-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .side-panel {
-    min-height: auto;
-  }
-
-  .detail-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-        @media (max-width: 860px) {
-          .forecast-grid {
-            grid-template-columns: repeat(3, 1fr);
+        /* ΕΞΥΠΝΑ RESPONSIVE BREAKPOINTS */
+        @media (max-width: 1350px) {
+          .top-grid {
+            grid-template-columns: 1fr 1.1fr;
           }
-
           .hourly-row {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(4, minmax(0, 1fr)); /* 4 στήλες σε μεσαίες οθόνες/laptops */
           }
+        }
 
+        @media (max-width: 1024px) {
+          .top-grid {
+            grid-template-columns: 1fr;
+          }
+          .side-panel {
+            min-height: auto;
+          }
+          .detail-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          }
+        }
+
+        @media (max-width: 768px) {
+          .forecast-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+          }
+          .hourly-row {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+          }
           .summary-strip {
             grid-template-columns: 1fr;
           }
@@ -583,7 +615,7 @@ function App() {
           .main-panel,
           .side-panel,
           .bottom-panel {
-            padding: 18px;
+            padding: 20px;
             border-radius: 24px;
           }
 
@@ -598,15 +630,19 @@ function App() {
           .search-btn {
             min-height: 40px;
             padding: 0 16px;
-            font-size: 0.68rem;
+            font-size: 0.7rem;
           }
 
           .forecast-grid {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+
+          .hourly-row {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
           }
 
           .detail-grid {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
           }
         }
 
@@ -614,11 +650,9 @@ function App() {
           .detail-grid {
             grid-template-columns: 1fr 1fr;
           }
-
           .hourly-row {
             grid-template-columns: 1fr 1fr;
           }
-
           .forecast-grid {
             grid-template-columns: 1fr 1fr;
           }
@@ -798,7 +832,7 @@ function App() {
 
           {/* BOTTOM DETAILS PANEL */}
           <div className="bottom-panel glass">
-            <div className="section-title" style={{ marginBottom: "14px" }}>
+            <div className="section-title" style={{ marginBottom: "16px" }}>
               ΛΕΠΤΟΜΕΡΕΙΕΣ ΚΑΙΡΟΥ
             </div>
 
@@ -927,11 +961,7 @@ function DetailTile({ label, val, icon, col }) {
     <div className="detail-tile glass">
       <i
         className={`material-icons tile-icon ${isReady ? "ready" : ""}`}
-        style={{
-          color: col,
-          fontSize: "24px",
-          marginBottom: "5px",
-        }}
+        style={{ fontSize: "32px", color: col, marginBottom: "8px" }}
       >
         {icon}
       </i>
