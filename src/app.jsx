@@ -120,8 +120,38 @@ function App() {
         .tile-icon { visibility: hidden; }
         .tile-icon.ready { visibility: visible !important; }
 
+        /* Hamburger button styles */
+        .hamburger-btn {
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          background: rgba(255, 255, 255, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          color: white;
+          padding: 8px;
+          border-radius: 50%;
+          cursor: pointer;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          z-index: 4000;
+          transition: background 0.2s ease;
+        }
+        .hamburger-btn:hover {
+          background: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+          .hamburger-btn { display: flex; }
+        }
+
         @media (max-width: 400px) { .detail-grid { grid-template-columns: repeat(2, 1fr) !important; } }
       `}</style>
+
+      {/* Hamburger Button μόνο για <= 768px στα αριστερά */}
+      <button className="hamburger-btn" onClick={() => setShowHistory(!showHistory)}>
+        <span className="material-icons" style={{ fontSize: '24px' }}>menu</span>
+      </button>
 
       {weather && (
         <div style={{ textAlign: 'center', width: '100%', maxWidth: '450px', display: 'flex', flexDirection: 'column', gap: '20px', padding: '20px' }}>
