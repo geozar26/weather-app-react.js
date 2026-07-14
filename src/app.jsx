@@ -274,27 +274,24 @@ function App() {
         .hamburger-btn {
           background: transparent;
           border: none;
-          color: #666;
+          color: #222; /* Σκούρο χρώμα για να κάνει αντίθεση στο λευκό search-bar */
           width: 34px;
           height: 34px;
           padding: 0;
           cursor: pointer;
-          display: flex; /* Διορθώθηκε: flex αντί για none ώστε να φαίνεται πάντα */
+          display: flex;
           align-items: center;
           justify-content: center;
           transition: all 0.2s ease;
           flex-shrink: 0;
           margin-left: 2px;
+          font-size: 24px; /* Μέγεθος για το σύμβολο ☰ */
+          font-weight: bold;
         }
 
         .hamburger-btn:hover {
           color: #000;
           transform: scale(1.08);
-        }
-
-        .hamburger-btn .material-icons {
-          font-size: 24px;
-          line-height: 1;
         }
 
         .history-dropdown {
@@ -329,8 +326,6 @@ function App() {
         }
 
         @media (max-width: 768px) {
-          /* Αφαιρέθηκε η κλάση .hamburger-btn από εδώ καθώς είναι πλέον flex εξ ορισμού */
-
           .search-wrapper {
             padding-left: 8px;
           }
@@ -435,7 +430,7 @@ function App() {
                 onClick={() => setShowHistory(!showHistory)}
                 aria-label="Άνοιγμα ιστορικού"
               >
-                <span className="material-icons">menu</span>
+                <span>☰</span>
               </button>
 
               <input
