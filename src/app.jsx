@@ -153,6 +153,7 @@ function App() {
         position: "relative",
       }}
     >
+      {/* Φόρτωση Material Icons της Google */}
       <link
         href="https://fonts.googleapis.com/icon?family=Material+Icons"
         rel="stylesheet"
@@ -180,85 +181,115 @@ function App() {
           max-width: 380px;
           z-index: 2000;
           margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
 
         .search-wrapper {
           background: white;
           border-radius: 50px;
-          padding: 4px 4px 4px 12px;
+          padding: 4px 6px 4px 12px;
           display: flex;
           align-items: center;
           width: 100%;
           box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-          height: 48px;
-          overflow: visible;
+          height: 50px;
           gap: 6px;
+        }
+
+        .hamburger-btn {
+          background: transparent;
+          border: none;
+          color: #555;
+          width: 32px;
+          height: 32px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s ease;
+          flex-shrink: 0;
+        }
+
+        .hamburger-btn:hover {
+          color: #000;
+          transform: scale(1.1);
+        }
+
+        .hamburger-btn i {
+          font-size: 24px !important;
         }
 
         .search-input {
           flex: 1;
           border: none;
           outline: none;
-          padding: 0 12px;
+          padding: 0 4px;
           color: #333;
           font-weight: 700;
           background: transparent;
           min-width: 0;
-          font-size: 0.9rem;
+          font-size: 0.95rem;
         }
 
         .search-btn {
           background: black;
           color: white;
           border: none;
-          height: 40px;
+          height: 38px;
           padding: 0 18px;
           border-radius: 50px;
           font-weight: 900;
           cursor: pointer;
-          font-size: 0.65rem;
+          font-size: 0.7rem;
           transition: transform 0.2s ease;
           flex-shrink: 0;
         }
 
         .search-btn:hover {
-          transform: scale(1.05);
+          transform: scale(1.04);
         }
 
         .close-icon-btn {
-          color: #666 !important;
+          color: #777 !important;
           cursor: pointer;
           transition: all 0.2s ease;
-          margin-right: 5px;
-          font-size: 20px !important;
+          margin-right: 4px;
+          font-size: 18px !important;
           display: flex !important;
           align-items: center;
+          flex-shrink: 0;
         }
 
         .close-icon-btn:hover {
-          transform: scale(1.2);
+          transform: scale(1.15);
           color: #000 !important;
         }
 
         .back-btn {
-          background: rgba(0,0,0,0.6);
-          color: white;
-          border: 1px solid rgba(255,255,255,0.4);
-          padding: 10px 22px;
-          border-radius: 50px;
-          font-size: 0.75rem;
-          font-weight: 900;
-          cursor: pointer;
-          margin-top: 15px;
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          transition: all 0.3s ease;
+          background: rgba(0,0,0,0.6) !important;
+          color: white !important;
+          border: 1px solid rgba(255,255,255,0.4) !important;
+          padding: 8px 18px !important;
+          border-radius: 50px !important;
+          font-size: 0.75rem !important;
+          font-weight: 900 !important;
+          cursor: pointer !important;
+          margin-top: 12px !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 6px !important;
+          transition: all 0.3s ease !important;
+          text-decoration: none !important;
+          width: auto !important;
+          height: auto !important;
         }
 
         .back-btn:hover {
-          background: white;
-          color: black;
+          background: white !important;
+          color: black !important;
           transform: translateY(-2px);
           box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
@@ -271,32 +302,9 @@ function App() {
           visibility: visible !important;
         }
 
-        .hamburger-btn {
-          background: transparent;
-          border: none;
-          color: #222; /* Σκούρο χρώμα για να κάνει αντίθεση στο λευκό search-bar */
-          width: 34px;
-          height: 34px;
-          padding: 0;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s ease;
-          flex-shrink: 0;
-          margin-left: 2px;
-          font-size: 24px; /* Μέγεθος για το σύμβολο ☰ */
-          font-weight: bold;
-        }
-
-        .hamburger-btn:hover {
-          color: #000;
-          transform: scale(1.08);
-        }
-
         .history-dropdown {
           position: absolute;
-          top: 110%;
+          top: 115%;
           left: 0;
           right: 0;
           background: white;
@@ -327,16 +335,11 @@ function App() {
 
         @media (max-width: 768px) {
           .search-wrapper {
-            padding-left: 8px;
+            padding-left: 10px;
           }
-
           .search-btn {
             padding: 0 14px;
-            font-size: 0.6rem;
-          }
-
-          .search-input {
-            padding: 0 8px;
+            font-size: 0.65rem;
           }
         }
 
@@ -424,13 +427,14 @@ function App() {
 
           <div className="search-container" ref={dropdownRef}>
             <div className="search-wrapper">
+              {/* Αντικατάσταση του Unicode ☰ με Material Icon menu */}
               <button
                 type="button"
                 className="hamburger-btn"
                 onClick={() => setShowHistory(!showHistory)}
                 aria-label="Άνοιγμα ιστορικού"
               >
-                <span>☰</span>
+                <span className="material-icons">menu</span>
               </button>
 
               <input
@@ -514,6 +518,7 @@ function App() {
               </div>
             )}
 
+            {/* Διορθωμένο κουμπί ΕΠΙΣΤΡΟΦΗ */}
             {formatText(weather.name) !== formatText(DEFAULT_CITY) && (
               <button
                 className="back-btn"
@@ -522,7 +527,7 @@ function App() {
                   getWeather(DEFAULT_CITY, true);
                 }}
               >
-                <span style={{ fontWeight: 900 }}>←</span> ΕΠΙΣΤΡΟΦΗ
+                <span>←</span> ΕΠΙΣΤΡΟΦΗ
               </button>
             )}
           </div>
