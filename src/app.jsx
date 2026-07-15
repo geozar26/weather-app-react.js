@@ -186,39 +186,45 @@ function App() {
           align-items: center;
         }
 
+        .search-row {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          gap: 10px;
+        }
+
         .search-wrapper {
           background: white;
           border-radius: 50px;
           padding: 4px 6px 4px 12px;
           display: flex;
           align-items: center;
-          width: 100%;
+          flex: 1; /* Επιτρέπει στο input να προσαρμόζεται όταν εμφανίζεται το κουμπί αριστερά */
           box-shadow: 0 10px 30px rgba(0,0,0,0.25);
           height: 50px;
           gap: 6px;
         }
 
-        .hamburger-btn {
-          background: transparent;
+        .hamburger-btn-outside {
+          background: #e67e22; /* Πορτοκαλί background */
           border: none;
-          color: #555;
-          width: 32px;
-          height: 32px;
+          color: white;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
           cursor: pointer;
-          display: flex;
+          display: none; /* Κρυφό σε μεγάλες οθόνες */
           align-items: center;
           justify-content: center;
           transition: all 0.2s ease;
           flex-shrink: 0;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+          font-size: 24px;
         }
 
-        .hamburger-btn:hover {
-          color: #000;
-          transform: scale(1.1);
-        }
-
-        .hamburger-btn i {
-          font-size: 24px !important;
+        .hamburger-btn-outside:hover {
+          background: #d35400;
+          transform: scale(1.05);
         }
 
         .search-input {
@@ -334,6 +340,9 @@ function App() {
         }
 
         @media (max-width: 768px) {
+          .hamburger-btn-outside {
+            display: flex; /* Εμφανίζεται μόνο σε οθόνες <= 768px */
+          }
           .search-wrapper {
             padding-left: 10px;
           }
@@ -426,45 +435,47 @@ function App() {
           </div>
 
           <div className="search-container" ref={dropdownRef}>
-            <div className="search-wrapper">
-              {/* Αντικατάσταση του Unicode ☰ με Material Icon menu */}
+            <div className="search-row">
+              {/* Το κουμπί hamburger βρίσκεται πλέον έξω από το search bar */}
               <button
                 type="button"
-                className="hamburger-btn"
+                className="hamburger-btn-outside"
                 onClick={() => setShowHistory(!showHistory)}
                 aria-label="Άνοιγμα ιστορικού"
               >
-                <span className="material-icons">menu</span>
+                ☰
               </button>
 
-              <input
-                className="search-input"
-                placeholder="ΑΝΑΖΗΤΗΣΗ..."
-                value={city}
-                onFocus={() => setShowHistory(true)}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setCity(val);
-                  if (val === "") setError("");
-                }}
-                onKeyDown={(e) => e.key === "Enter" && getWeather(city)}
-              />
-
-              {city && (
-                <span
-                  className="material-icons close-icon-btn"
-                  onClick={() => {
-                    setCity("");
-                    setError("");
+              <div className="search-wrapper">
+                <input
+                  className="search-input"
+                  placeholder="ΑΝΑΖΗΤΗΣΗ..."
+                  value={city}
+                  onFocus={() => setShowHistory(true)}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setCity(val);
+                    if (val === "") setError("");
                   }}
-                >
-                  close
-                </span>
-              )}
+                  onKeyDown={(e) => e.key === "Enter" && getWeather(city)}
+                />
 
-              <button className="search-btn" onClick={() => getWeather(city)}>
-                ΑΝΑΖΗΤΗΣΗ
-              </button>
+                {city && (
+                  <span
+                    className="material-icons close-icon-btn"
+                    onClick={() => {
+                      setCity("");
+                      setError("");
+                    }}
+                  >
+                    close
+                  </span>
+                )}
+
+                <button className="search-btn" onClick={() => getWeather(city)}>
+                  ΑΝΑΖΗΤΗΣΗ
+                </button>
+              </div>
             </div>
 
             {error && (
@@ -518,7 +529,6 @@ function App() {
               </div>
             )}
 
-            {/* Διορθωμένο κουμπί ΕΠΙΣΤΡΟΦΗ */}
             {formatText(weather.name) !== formatText(DEFAULT_CITY) && (
               <button
                 className="back-btn"
