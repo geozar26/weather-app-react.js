@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import "./app.css";
 
 function App() {
   const [city, setCity] = useState("");
@@ -159,206 +160,6 @@ function App() {
         rel="stylesheet"
       />
 
-      <style>{`
-        * {
-          box-sizing: border-box;
-          font-family: 'Segoe UI', sans-serif;
-          margin: 0;
-          padding: 0;
-        }
-
-        .glass {
-          background: rgba(255, 255, 255, 0.15) !important;
-          backdrop-filter: blur(12px);
-          border-radius: 22px;
-          border: 1px solid rgba(255, 255, 255, 0.25);
-          box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .search-container {
-          position: relative;
-          width: 100%;
-          max-width: 380px;
-          z-index: 2000;
-          margin: 0 auto;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-
-        .search-row {
-          display: flex;
-          align-items: center;
-          width: 100%;
-          gap: 10px;
-        }
-
-        .search-wrapper {
-          background: white;
-          border-radius: 50px;
-          padding: 4px 6px 4px 12px;
-          display: flex;
-          align-items: center;
-          flex: 1; /* Επιτρέπει στο input να προσαρμόζεται όταν εμφανίζεται το κουμπί αριστερά */
-          box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-          height: 50px;
-          gap: 6px;
-        }
-
-        .hamburger-btn-outside {
-          background: #e67e22; /* Πορτοκαλί background */
-          border: none;
-          color: white;
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          cursor: pointer;
-          display: none; /* Κρυφό σε μεγάλες οθόνες */
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s ease;
-          flex-shrink: 0;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-          font-size: 24px;
-        }
-
-        .hamburger-btn-outside:hover {
-          background: #d35400;
-          transform: scale(1.05);
-        }
-
-        .search-input {
-          flex: 1;
-          border: none;
-          outline: none;
-          padding: 0 4px;
-          color: #333;
-          font-weight: 700;
-          background: transparent;
-          min-width: 0;
-          font-size: 0.95rem;
-        }
-
-        .search-btn {
-          background: black;
-          color: white;
-          border: none;
-          height: 38px;
-          padding: 0 18px;
-          border-radius: 50px;
-          font-weight: 900;
-          cursor: pointer;
-          font-size: 0.7rem;
-          transition: transform 0.2s ease;
-          flex-shrink: 0;
-        }
-
-        .search-btn:hover {
-          transform: scale(1.04);
-        }
-
-        .close-icon-btn {
-          color: #777 !important;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          margin-right: 4px;
-          font-size: 18px !important;
-          display: flex !important;
-          align-items: center;
-          flex-shrink: 0;
-        }
-
-        .close-icon-btn:hover {
-          transform: scale(1.15);
-          color: #000 !important;
-        }
-
-        .back-btn {
-          background: rgba(0,0,0,0.6) !important;
-          color: white !important;
-          border: 1px solid rgba(255,255,255,0.4) !important;
-          padding: 8px 18px !important;
-          border-radius: 50px !important;
-          font-size: 0.75rem !important;
-          font-weight: 900 !important;
-          cursor: pointer !important;
-          margin-top: 12px !important;
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          gap: 6px !important;
-          transition: all 0.3s ease !important;
-          text-decoration: none !important;
-          width: auto !important;
-          height: auto !important;
-        }
-
-        .back-btn:hover {
-          background: white !important;
-          color: black !important;
-          transform: translateY(-2px);
-          box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .tile-icon {
-          visibility: hidden;
-        }
-
-        .tile-icon.ready {
-          visibility: visible !important;
-        }
-
-        .history-dropdown {
-          position: absolute;
-          top: 115%;
-          left: 0;
-          right: 0;
-          background: white;
-          border-radius: 20px;
-          z-index: 3000;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-          overflow: hidden;
-        }
-
-        .history-item {
-          padding: 12px 18px;
-          color: #333;
-          cursor: pointer;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          font-weight: 800;
-          border-bottom: 1px solid #eee;
-        }
-
-        .history-item:last-child {
-          border-bottom: none;
-        }
-
-        .history-item:hover {
-          background: #f7f7f7;
-        }
-
-        @media (max-width: 768px) {
-          .hamburger-btn-outside {
-            display: flex; /* Εμφανίζεται μόνο σε οθόνες <= 768px */
-          }
-          .search-wrapper {
-            padding-left: 10px;
-          }
-          .search-btn {
-            padding: 0 14px;
-            font-size: 0.65rem;
-          }
-        }
-
-        @media (max-width: 400px) {
-          .detail-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-        }
-      `}</style>
-
       {weather && (
         <div
           style={{
@@ -371,18 +172,28 @@ function App() {
             padding: "20px",
           }}
         >
-          <div>
+          {/* ΝΕΟ HEADER CONTAINER: Τοποθετεί το Hamburger αριστερά από την ημερομηνία */}
+          <div className="top-header-container">
+            <button
+              type="button"
+              className="hamburger-btn-outside"
+              onClick={() => setShowHistory(!showHistory)}
+              aria-label="Άνοιγμα ιστορικού"
+            >
+              ☰
+            </button>
             <div
               style={{
                 fontWeight: 900,
                 fontSize: "0.9rem",
-                marginBottom: 5,
                 textShadow: "0 2px 4px rgba(0,0,0,0.2)",
               }}
             >
               {localTime.date} {localTime.time}
             </div>
+          </div>
 
+          <div>
             <div
               style={{
                 display: "flex",
@@ -436,16 +247,6 @@ function App() {
 
           <div className="search-container" ref={dropdownRef}>
             <div className="search-row">
-              {/* Το κουμπί hamburger βρίσκεται πλέον έξω από το search bar */}
-              <button
-                type="button"
-                className="hamburger-btn-outside"
-                onClick={() => setShowHistory(!showHistory)}
-                aria-label="Άνοιγμα ιστορικού"
-              >
-                ☰
-              </button>
-
               <div className="search-wrapper">
                 <input
                   className="search-input"
@@ -564,14 +365,7 @@ function App() {
             ))}
           </div>
 
-          <div
-            className="detail-grid"
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: "10px",
-            }}
-          >
+          <div className="detail-grid">
             <DetailTile
               label="ΑΙΣΘΗΤΗ"
               val={`${Math.round(weather.main.feels_like)}°`}
