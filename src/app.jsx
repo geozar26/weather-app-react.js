@@ -120,6 +120,21 @@ function App() {
     ? history.filter((h) => h.toLowerCase().startsWith(city.toLowerCase()))
     : history;
 
+  // Υπολογισμός της τρέχουσας τοπικής ώρας της πόλης σε δευτερόλεπτα (epoch)
+  const getLocalTimestamp = () => {
+    if (!weather) return 0;
+    const d = new Date();
+    const utc = d.getTime() + d.getTimezoneOffset() * 60000;
+    return Math.floor((utc + weather.timezone * 1000) / 1000);
+  };
+
+  const currentLocalTime = getLocalTimestamp();
+
+  // Έλεγχος αν η τοπική ώρα είναι πριν την ανατολή ή μετά τη δύση του ήλιου (δηλαδή είναι νύχτα)
+  const isNight = weather 
+    ? (currentLocalTime < weather.sys.sunrise || currentLocalTime > weather.sys.sunset) 
+    : false;
+
   const getBg = (main) => {
     switch (main) {
       case "Clear":
@@ -235,7 +250,8 @@ function App() {
                 gap: "8px",
               }}
             >
-              <MainWeatherIcon iconType={weather.weather[0].main} />
+              {/* Περνάμε το isNight στο εικονίδιο για να δείχνει φεγγάρι αν είναι νύχτα */}
+              <MainWeatherIcon iconType={weather.weather[0].main} isNight={isNight} />
               <div
                 style={{
                   fontSize: "1.2rem",
