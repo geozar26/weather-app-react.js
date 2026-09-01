@@ -12,6 +12,7 @@ function App() {
   const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory] = useState([]);
   const [localTime, setLocalTime] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
   const dropdownRef = useRef(null);
 
   const API_KEY = "8e870e1f59cadca07199db1d225e0dec";
@@ -26,6 +27,7 @@ function App() {
     const d = new Date();
     const utc = d.getTime() + d.getTimezoneOffset() * 60000;
     const nd = new Date(utc + 1000 * offset);
+
     return {
       date: formatText(
         nd.toLocaleDateString("el-GR", {
@@ -44,6 +46,7 @@ function App() {
   useEffect(() => {
     const saved = localStorage.getItem("weatherHistory");
     setHistory(saved ? JSON.parse(saved) : []);
+
     getWeather(DEFAULT_CITY, true);
 
     const handleClickOutside = (event) => {
@@ -53,14 +56,17 @@ function App() {
     };
 
     document.addEventListener("mousedown", handleClickOutside);
+
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
     if (!weather) return;
+
     const timer = setInterval(() => {
       setLocalTime(getLocalTime(weather.timezone));
     }, 1000);
+
     return () => clearInterval(timer);
   }, [weather]);
 
@@ -73,6 +79,7 @@ function App() {
 
     setError("");
     setShowHistory(false);
+
     const searchName = cityName.trim();
 
     try {
@@ -98,6 +105,7 @@ function App() {
 
       setWeather(data);
       setLocalTime(getLocalTime(data.timezone));
+
       setForecast(
         fData.list
           .filter((item) => item.dt_txt.includes("12:00:00"))
@@ -106,7 +114,12 @@ function App() {
 
       if (!isInitial) {
         setHistory((prev) =>
-          [searchName, ...prev.filter((c) => c.toLowerCase() !== searchName.toLowerCase())].slice(0, 10)
+          [
+            searchName,
+            ...prev.filter(
+              (c) => c.toLowerCase() !== searchName.toLowerCase()
+            ),
+          ].slice(0, 10)
         );
       }
 
@@ -117,22 +130,27 @@ function App() {
   };
 
   const filteredHistory = city
-    ? history.filter((h) => h.toLowerCase().startsWith(city.toLowerCase()))
+    ? history.filter((h) =>
+        h.toLowerCase().startsWith(city.toLowerCase())
+      )
     : history;
 
-  // Υπολογισμός της τρέχουσας τοπικής ώρας της πόλης σε δευτερόλεπτα (epoch)
   const getLocalTimestamp = () => {
     if (!weather) return 0;
+
     const d = new Date();
     const utc = d.getTime() + d.getTimezoneOffset() * 60000;
-    return Math.floor((utc + weather.timezone * 1000) / 1000);
+
+    return Math.floor(
+      (utc + weather.timezone * 1000) / 1000
+    );
   };
 
   const currentLocalTime = getLocalTimestamp();
 
-  // Έλεγχος αν η τοπική ώρα είναι πριν την ανατολή ή μετά τη δύση του ήλιου (δηλαδή είναι νύχτα)
-  const isNight = weather 
-    ? (currentLocalTime < weather.sys.sunrise || currentLocalTime > weather.sys.sunset) 
+  const isNight = weather
+    ? currentLocalTime < weather.sys.sunrise ||
+      currentLocalTime > weather.sys.sunset
     : false;
 
   const getBg = (main) => {
@@ -167,16 +185,103 @@ function App() {
         alignItems: "center",
         justifyContent: "center",
         color: "white",
-        background: weather ? getBg(weather.weather[0].main) : "#2c3e50",
+        background: weather
+          ? getBg(weather.weather[0].main)
+          : "#2c3e50",
         transition: "background 0.8s ease",
         position: "relative",
       }}
     >
-      {/* Φόρτωση Material Icons της Google */}
       <link
         href="https://fonts.googleapis.com/icon?family=Material+Icons"
         rel="stylesheet"
       />
+
+      {/* MOBILE WEATHER MENU */}
+      {showMenu && (
+        <>
+          <div
+            className="mobile-menu-backdrop"
+            onClick={() => setShowMenu(false)}
+          ></div>
+
+          <aside className="mobile-weather-menu">
+            <div className="mobile-menu-header">
+              <div>
+                <span className="mobile-menu-kicker">WEATHER</span>
+                <h2>MENU</h2>
+              </div>
+
+              <button
+                className="mobile-menu-close"
+                onClick={() => setShowMenu(false)}
+                aria-label="Κλείσιμο menu"
+              >
+                ×
+              </button>
+            </div>
+
+            <nav className="mobile-weather-nav">
+              <button
+                className="mobile-weather-nav-item active"
+                onClick={() => setShowMenu(false)}
+              >
+                <span className="nav-number">01</span>
+                <span className="nav-label">ΤΡΕΧΩΝ ΚΑΙΡΟΣ</span>
+                <span className="nav-arrow">→</span>
+              </button>
+
+              <button
+                className="mobile-weather-nav-item"
+                onClick={() => setShowMenu(false)}
+              >
+                <span className="nav-number">02</span>
+                <span className="nav-label">ΠΡΟΓΝΩΣΗ</span>
+                <span className="nav-arrow">→</span>
+              </button>
+
+              <button
+                className="mobile-weather-nav-item"
+                onClick={() => setShowMenu(false)}
+              >
+                <span className="nav-number">03</span>
+                <span className="nav-label">WEATHER MAP</span>
+                <span className="nav-arrow">→</span>
+              </button>
+
+              <button
+                className="mobile-weather-nav-item"
+                onClick={() => {
+                  setShowMenu(false);
+                  setShowHistory(true);
+                }}
+              >
+                <span className="nav-number">04</span>
+                <span className="nav-label">ΙΣΤΟΡΙΚΟ</span>
+                <span className="nav-arrow">→</span>
+              </button>
+
+              <button
+                className="mobile-weather-nav-item"
+                onClick={() => setShowMenu(false)}
+              >
+                <span className="nav-number">05</span>
+                <span className="nav-label">ΑΓΑΠΗΜΕΝΑ</span>
+                <span className="nav-arrow">→</span>
+              </button>
+            </nav>
+
+            <div className="mobile-menu-footer">
+              <span>LIVE WEATHER</span>
+
+              <div className="mobile-menu-status">
+                <span className="status-dot"></span>
+                <span>ONLINE</span>
+              </div>
+            </div>
+          </aside>
+        </>
+      )}
 
       {weather && (
         <div
@@ -195,11 +300,12 @@ function App() {
             <button
               type="button"
               className="hamburger-btn-outside"
-              onClick={() => setShowHistory(!showHistory)}
-              aria-label="Άνοιγμα ιστορικού"
+              onClick={() => setShowMenu(true)}
+              aria-label="Άνοιγμα weather menu"
             >
               ☰
             </button>
+
             <div
               style={{
                 fontWeight: 900,
@@ -250,8 +356,11 @@ function App() {
                 gap: "8px",
               }}
             >
-              {/* Περνάμε το isNight στο εικονίδιο για να δείχνει φεγγάρι αν είναι νύχτα */}
-              <MainWeatherIcon iconType={weather.weather[0].main} isNight={isNight} />
+              <MainWeatherIcon
+                iconType={weather.weather[0].main}
+                isNight={isNight}
+              />
+
               <div
                 style={{
                   fontSize: "1.2rem",
@@ -265,7 +374,10 @@ function App() {
           </div>
 
           {/* SEARCH CONTAINER */}
-          <div className="search-container" ref={dropdownRef}>
+          <div
+            className="search-container"
+            ref={dropdownRef}
+          >
             <div className="search-row">
               <div className="search-wrapper">
                 <input
@@ -276,9 +388,14 @@ function App() {
                   onChange={(e) => {
                     const val = e.target.value;
                     setCity(val);
-                    if (val === "") setError("");
+
+                    if (val === "") {
+                      setError("");
+                    }
                   }}
-                  onKeyDown={(e) => e.key === "Enter" && getWeather(city)}
+                  onKeyDown={(e) =>
+                    e.key === "Enter" && getWeather(city)
+                  }
                 />
 
                 {city && (
@@ -293,7 +410,10 @@ function App() {
                   </span>
                 )}
 
-                <button className="search-btn" onClick={() => getWeather(city)}>
+                <button
+                  className="search-btn"
+                  onClick={() => getWeather(city)}
+                >
                   ΑΝΑΖΗΤΗΣΗ
                 </button>
               </div>
@@ -323,12 +443,19 @@ function App() {
                       onClick={() => getWeather(h)}
                     >
                       <span>{h}</span>
+
                       <span
                         className="material-icons close-icon-btn"
-                        style={{ fontSize: "18px", marginRight: 0 }}
+                        style={{
+                          fontSize: "18px",
+                          marginRight: 0,
+                        }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          setHistory((prev) => prev.filter((c) => c !== h));
+
+                          setHistory((prev) =>
+                            prev.filter((c) => c !== h)
+                          );
                         }}
                       >
                         close
@@ -350,7 +477,8 @@ function App() {
               </div>
             )}
 
-            {formatText(weather.name) !== formatText(DEFAULT_CITY) && (
+            {formatText(weather.name) !==
+              formatText(DEFAULT_CITY) && (
               <button
                 className="back-btn"
                 onClick={() => {
@@ -364,7 +492,10 @@ function App() {
           </div>
 
           {/* FORECAST SECTION */}
-          <WeatherForecast forecast={forecast} formatText={formatText} />
+          <WeatherForecast
+            forecast={forecast}
+            formatText={formatText}
+          />
 
           {/* DETAIL GRID */}
           <div className="detail-grid">
@@ -374,22 +505,28 @@ function App() {
               icon="thermostat"
               col="#FFD700"
             />
+
             <DetailTile
               label="ΥΓΡΑΣΙΑ"
               val={`${weather.main.humidity}%`}
               icon="water_drop"
               col="#4dabf7"
             />
+
             <DetailTile
               label="ΑΝΕΜΟΣ"
               val={`${Math.round(weather.wind.speed)}m/s`}
               icon="air"
               col="#69db7c"
             />
+
             <DetailTile
               label="ΑΝΑΤΟΛΗ"
               val={new Date(
-                (weather.sys.sunrise + weather.timezone - 7200) * 1000
+                (weather.sys.sunrise +
+                  weather.timezone -
+                  7200) *
+                  1000
               ).toLocaleTimeString("el-GR", {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -397,10 +534,14 @@ function App() {
               icon="wb_sunny"
               col="#ffd43b"
             />
+
             <DetailTile
               label="ΔΥΣΗ"
               val={new Date(
-                (weather.sys.sunset + weather.timezone - 7200) * 1000
+                (weather.sys.sunset +
+                  weather.timezone -
+                  7200) *
+                  1000
               ).toLocaleTimeString("el-GR", {
                 hour: "2-digit",
                 minute: "2-digit",
@@ -408,6 +549,7 @@ function App() {
               icon="wb_twilight"
               col="#FF3D00"
             />
+
             <DetailTile
               label="ΑΤΜ ΠΙΕΣΗ"
               val={`${weather.main.pressure} hPa`}
