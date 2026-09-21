@@ -192,10 +192,7 @@ function App() {
         position: "relative",
       }}
     >
-      <link
-        href="https://fonts.googleapis.com/icon?family=Material+Icons"
-        rel="stylesheet"
-      />
+    
 
       {/* MOBILE WEATHER MENU */}
       {showMenu && (

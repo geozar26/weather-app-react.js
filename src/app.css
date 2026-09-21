@@ -1,4 +1,28 @@
 /* =========================================
+   MATERIAL ICONS
+   ========================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Material+Icons&display=block");
+
+.material-icons {
+  font-family: "Material Icons";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "liga";
+}
+
+
+/* =========================================
    GLOBAL STYLES
    ========================================== */
 
@@ -49,27 +73,18 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
-
   width: 40px;
   height: 40px;
   padding: 0;
-
   background: #e67e22;
-
   border: none;
   border-radius: 50%;
-
   color: white;
-
   cursor: pointer;
-
   flex-shrink: 0;
-
   box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.25);
-
   font-size: 20px;
-
   transition:
     background 0.2s ease,
     transform 0.2s ease;
@@ -87,14 +102,10 @@ body {
 
 .search-container {
   position: relative;
-
   width: 100%;
   max-width: 380px;
-
   z-index: 2000;
-
   margin: 0 auto;
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -103,49 +114,33 @@ body {
 .search-row {
   display: flex;
   align-items: center;
-
   width: 100%;
-
   gap: 10px;
 }
 
 .search-wrapper {
   background: white;
-
   border-radius: 50px;
-
   padding: 4px 6px 4px 12px;
-
   display: flex;
   align-items: center;
-
   flex: 1;
-
   width: 100%;
   height: 50px;
-
   gap: 6px;
-
   box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
 .search-input {
   flex: 1;
-
   min-width: 0;
-
   border: none;
   outline: none;
-
   padding: 0 4px;
-
   background: transparent;
-
   color: #333;
-
   font-size: 0.95rem;
-
   font-weight: 700;
 }
 
@@ -156,25 +151,15 @@ body {
 
 .search-btn {
   height: 38px;
-
   padding: 0 18px;
-
   flex-shrink: 0;
-
   background: black;
-
   border: none;
-
   border-radius: 50px;
-
   color: white;
-
   cursor: pointer;
-
   font-size: 0.7rem;
-
   font-weight: 900;
-
   transition:
     background 0.2s ease,
     transform 0.2s ease;
@@ -193,20 +178,13 @@ body {
 .close-icon-btn,
 i.material-icons.close-icon-btn {
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   flex-shrink: 0;
-
   margin-right: 4px;
-
   color: #777;
-
   cursor: pointer;
-
   font-size: 18px;
-
   transition:
     color 0.2s ease,
     transform 0.2s ease;
@@ -225,36 +203,22 @@ i.material-icons.close-icon-btn:hover {
 
 .back-btn {
   display: inline-flex;
-
   align-items: center;
   justify-content: center;
-
   width: auto;
   height: auto;
-
   gap: 6px;
-
   margin-top: 12px;
-
   padding: 8px 18px;
-
   background: rgba(0, 0, 0, 0.6);
-
   border:
     1px solid rgba(255, 255, 255, 0.4);
-
   border-radius: 50px;
-
   color: white;
-
   cursor: pointer;
-
   font-size: 0.75rem;
-
   font-weight: 900;
-
   text-decoration: none;
-
   transition:
     background 0.3s ease,
     color 0.3s ease,
@@ -264,13 +228,40 @@ i.material-icons.close-icon-btn:hover {
 
 .back-btn:hover {
   background: white;
-
   color: black;
-
   transform: translateY(-2px);
-
   box-shadow:
     0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+
+/* =========================================
+   WEATHER CONDITION
+   ========================================== */
+
+.weather-condition-row {
+  min-height: 40px;
+}
+
+.weather-icon-slot {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weather-icon-slot .material-icons {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 
@@ -293,41 +284,27 @@ i.material-icons.close-icon-btn:hover {
 
 .history-dropdown {
   position: absolute;
-
   top: 115%;
   left: 0;
   right: 0;
-
   z-index: 3000;
-
   overflow: hidden;
-
   background: white;
-
   border-radius: 20px;
-
   box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .history-item {
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
   padding: 12px 18px;
-
   border-bottom:
     1px solid #eee;
-
   color: #333;
-
   cursor: pointer;
-
   font-weight: 800;
-
   transition:
     background 0.2s ease;
 }
@@ -347,10 +324,8 @@ i.material-icons.close-icon-btn:hover {
 
 .detail-grid {
   display: grid;
-
   grid-template-columns:
     repeat(3, 1fr);
-
   gap: 10px;
 }
 
@@ -361,18 +336,12 @@ i.material-icons.close-icon-btn:hover {
 
 .mobile-menu-backdrop {
   display: block;
-
   position: fixed;
-
   inset: 0;
-
   z-index: 9000;
-
   background: rgba(0, 0, 0, 0.45);
-
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-
   animation:
     weatherBackdropIn 0.28s ease forwards;
 }
@@ -384,37 +353,24 @@ i.material-icons.close-icon-btn:hover {
 
 .mobile-weather-menu {
   position: fixed;
-
   top: 0;
   left: 0;
   bottom: 0;
-
   z-index: 9100;
-
   display: flex;
-
   flex-direction: column;
-
   width: min(84vw, 320px);
-
   padding: 25px 20px;
-
   background: #1e293b;
-
-
 
   backdrop-filter: blur(50px) saturate(125%);
   -webkit-backdrop-filter: blur(50px) saturate(125%);
-
   border-right:
     1px solid rgba(255, 255, 255, 0.18);
-
   box-shadow:
     20px 0 50px rgba(0, 0, 0, 0.35),
     inset -1px 0 0 rgba(255, 255, 255, 0.08);
-
   overflow-y: auto;
-
   animation:
     weatherMenuIn
     0.32s
@@ -429,52 +385,35 @@ i.material-icons.close-icon-btn:hover {
 
 .mobile-menu-header {
   display: flex;
-
   flex-direction: row;
-
   align-items: center;
-
   justify-content: space-between;
-
   gap: 15px;
-
   padding-bottom: 20px;
-
   border-bottom:
     1px solid rgba(255, 255, 255, 0.12);
 }
 
 .mobile-menu-header > div:first-child {
   display: flex;
-
   flex-direction: column;
-
   align-items: flex-start;
-
   gap: 8px;
 }
 
 .mobile-menu-kicker {
   color: #cbd5e1;
-
   font-size: 0.65rem;
-
   font-weight: 900;
-
   letter-spacing: 0.22em;
 }
 
 .mobile-menu-header h2 {
   margin: 0;
-
   color: white;
-
   font-size: clamp(1.5rem, 6vw, 2.2rem);
-
   line-height: 0.95;
-
   font-weight: 950;
-
   letter-spacing: -0.04em;
 }
 
@@ -485,42 +424,27 @@ i.material-icons.close-icon-btn:hover {
 
 .mobile-menu-close {
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   width: 42px;
   height: 42px;
-
   padding: 0;
-
   flex-shrink: 0;
-
   background:
     rgba(255, 255, 255, 0.08);
-
   border:
     1px solid rgba(255, 255, 255, 0.18);
-
   border-radius: 14px;
-
   color: #e2e8f0;
-
   cursor: pointer;
-
   font-size: 26px;
-
   font-weight: 300;
-
   line-height: 1;
-
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-
   box-shadow:
     0 4px 15px rgba(0, 0, 0, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
-
   transition:
     background 0.25s ease,
     color 0.25s ease,
@@ -532,16 +456,12 @@ i.material-icons.close-icon-btn:hover {
 .mobile-menu-close:hover {
   background:
     rgba(239, 68, 68, 0.22);
-
   border-color:
     rgba(248, 113, 113, 0.6);
-
   color: #fecaca;
-
   transform:
     rotate(90deg)
     scale(1.05);
-
   box-shadow:
     0 6px 20px rgba(239, 68, 68, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -560,46 +480,30 @@ i.material-icons.close-icon-btn:hover {
 
 .mobile-weather-nav {
   display: flex;
-
   flex-direction: column;
-
   gap: 18px;
-
   margin-top: 25px;
 }
 
 .mobile-weather-nav-item {
   display: grid;
-
   grid-template-columns:
     38px
     1fr
     28px;
-
   align-items: center;
-
   width: 100%;
-
   gap: 18px;
-
   padding: 16px 14px;
-
   background:
     rgba(255, 255, 255, 0.045);
-
   border:
     1px solid rgba(255, 255, 255, 0.10);
-
   border-radius: 15px;
-
   color: white;
-
   text-align: left;
-
   cursor: pointer;
-
   text-decoration: none;
-
   transition:
     background 0.25s ease,
     transform 0.25s ease,
@@ -610,13 +514,10 @@ i.material-icons.close-icon-btn:hover {
 .mobile-weather-nav-item:hover {
   background:
     rgba(255, 255, 255, 0.13);
-
   border-color:
     rgba(255, 255, 255, 0.20);
-
   transform:
     translateX(5px);
-
   box-shadow:
     0 8px 22px rgba(0, 0, 0, 0.22);
 }
@@ -624,7 +525,6 @@ i.material-icons.close-icon-btn:hover {
 .mobile-weather-nav-item.active {
   background:
     rgba(230, 126, 34, 0.20);
-
   border-color:
     rgba(230, 126, 34, 0.50);
 }
@@ -636,11 +536,8 @@ i.material-icons.close-icon-btn:hover {
 
 .nav-number {
   color: #94a3b8;
-
   font-size: 0.68rem;
-
   font-weight: 900;
-
   letter-spacing: 0.08em;
 }
 
@@ -655,13 +552,9 @@ i.material-icons.close-icon-btn:hover {
 
 .nav-label {
   color: white;
-
   font-size: 0.85rem;
-
   font-weight: 900;
-
   letter-spacing: 0.08em;
-
   white-space: nowrap;
 }
 
@@ -672,16 +565,11 @@ i.material-icons.close-icon-btn:hover {
 
 .nav-arrow {
   display: flex;
-
   align-items: center;
   justify-content: center;
-
   color: #94a3b8;
-
   font-size: 1.1rem;
-
   font-weight: 700;
-
   transition:
     color 0.2s ease,
     transform 0.2s ease;
@@ -689,7 +577,6 @@ i.material-icons.close-icon-btn:hover {
 
 .mobile-weather-nav-item:hover .nav-arrow {
   color: white;
-
   transform:
     translateX(4px);
 }
@@ -701,26 +588,16 @@ i.material-icons.close-icon-btn:hover {
 
 .mobile-menu-footer {
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
   margin-top: auto;
-
   padding-top: 28px;
-
   padding-bottom: 5px;
-
   border-top:
     1px solid rgba(255, 255, 255, 0.10);
-
   color: #94a3b8;
-
   font-size: 0.6rem;
-
   font-weight: 900;
-
   letter-spacing: 0.16em;
 }
 
@@ -731,31 +608,21 @@ i.material-icons.close-icon-btn:hover {
 
 .mobile-menu-status {
   display: flex;
-
   align-items: center;
-
   gap: 8px;
-
   color: #cbd5e1;
-
   font-size: 0.6rem;
-
   font-weight: 900;
-
   letter-spacing: 0.1em;
 }
 
 .status-dot {
   width: 7px;
   height: 7px;
-
   border-radius: 50%;
-
   background: #22c55e;
-
   box-shadow:
     0 0 10px rgba(34, 197, 94, 0.8);
-
   animation:
     statusPulse
     1.8s
@@ -769,7 +636,6 @@ i.material-icons.close-icon-btn:hover {
    ========================================== */
 
 @media (max-width: 768px) {
-
   .hamburger-btn-outside {
     display: flex;
   }
@@ -780,7 +646,6 @@ i.material-icons.close-icon-btn:hover {
 
   .search-btn {
     padding: 0 14px;
-
     font-size: 0.65rem;
   }
 
@@ -799,7 +664,6 @@ i.material-icons.close-icon-btn:hover {
    ========================================== */
 
 @media (max-width: 400px) {
-
   .detail-grid {
     grid-template-columns:
       repeat(2, 1fr);
@@ -807,7 +671,6 @@ i.material-icons.close-icon-btn:hover {
 
   .mobile-weather-menu {
     width: 88vw;
-
     padding: 22px 16px;
   }
 
@@ -821,7 +684,6 @@ i.material-icons.close-icon-btn:hover {
 
   .mobile-weather-nav {
     gap: 14px;
-
     margin-top: 22px;
   }
 
@@ -830,15 +692,12 @@ i.material-icons.close-icon-btn:hover {
       28px
       1fr
       20px;
-
     gap: 12px;
-
     padding: 15px 12px;
   }
 
   .nav-label {
     font-size: 0.76rem;
-
     letter-spacing: 0.06em;
   }
 
@@ -857,7 +716,6 @@ i.material-icons.close-icon-btn:hover {
    ========================================== */
 
 @keyframes weatherMenuIn {
-
   from {
     transform: translateX(-100%);
   }
@@ -865,11 +723,9 @@ i.material-icons.close-icon-btn:hover {
   to {
     transform: translateX(0);
   }
-
 }
 
 @keyframes weatherBackdropIn {
-
   from {
     opacity: 0;
   }
@@ -877,11 +733,9 @@ i.material-icons.close-icon-btn:hover {
   to {
     opacity: 1;
   }
-
 }
 
 @keyframes statusPulse {
-
   0%,
   100% {
     opacity: 1;
@@ -892,5 +746,4 @@ i.material-icons.close-icon-btn:hover {
     opacity: 0.55;
     transform: scale(0.8);
   }
-
 }
