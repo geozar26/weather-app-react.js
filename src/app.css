@@ -21,7 +21,6 @@
   font-feature-settings: "liga";
 }
 
-
 /* =========================================
    GLOBAL STYLES
    ========================================== */
@@ -56,6 +55,54 @@ body {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
+/* =========================================
+   WEATHER BRAND / LOGO
+   ========================================== */
+
+.weather-brand {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  z-index: 5000;
+  display: flex;
+  align-items: center;
+  width: max-content;
+  pointer-events: none;
+}
+
+.weather-brand-main {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+}
+
+.weather-brand-art {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.weather-brand-text {
+  position: relative;
+  z-index: 1;
+  color: white;
+  font-size: 1.55rem;
+  font-weight: 950;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  white-space: nowrap;
+}
+
+.mobile-weather-brand {
+  display: none;
+  margin-bottom: 22px;
+}
 
 /* =========================================
    HEADER
@@ -94,7 +141,6 @@ body {
   background: #d35400;
   transform: scale(1.05);
 }
-
 
 /* =========================================
    SEARCH
@@ -170,7 +216,6 @@ body {
   transform: scale(1.04);
 }
 
-
 /* =========================================
    SEARCH CLOSE ICON
    ========================================== */
@@ -195,7 +240,6 @@ i.material-icons.close-icon-btn:hover {
   transform: scale(1.15);
   color: #000;
 }
-
 
 /* =========================================
    BACK BUTTON
@@ -234,7 +278,6 @@ i.material-icons.close-icon-btn:hover {
     0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-
 /* =========================================
    WEATHER CONDITION
    ========================================== */
@@ -264,7 +307,6 @@ i.material-icons.close-icon-btn:hover {
   text-align: center;
 }
 
-
 /* =========================================
    WEATHER TILES
    ========================================== */
@@ -276,7 +318,6 @@ i.material-icons.close-icon-btn:hover {
 .tile-icon.ready {
   visibility: visible;
 }
-
 
 /* =========================================
    HISTORY DROPDOWN
@@ -317,7 +358,6 @@ i.material-icons.close-icon-btn:hover {
   background: #f7f7f7;
 }
 
-
 /* =========================================
    DETAIL GRID
    ========================================== */
@@ -328,7 +368,6 @@ i.material-icons.close-icon-btn:hover {
     repeat(3, 1fr);
   gap: 10px;
 }
-
 
 /* =========================================
    MOBILE WEATHER MENU BACKDROP
@@ -346,7 +385,6 @@ i.material-icons.close-icon-btn:hover {
     weatherBackdropIn 0.28s ease forwards;
 }
 
-
 /* =========================================
    MOBILE SIDEBAR
    ========================================== */
@@ -362,7 +400,6 @@ i.material-icons.close-icon-btn:hover {
   width: min(84vw, 320px);
   padding: 25px 20px;
   background: #1e293b;
-
   backdrop-filter: blur(50px) saturate(125%);
   -webkit-backdrop-filter: blur(50px) saturate(125%);
   border-right:
@@ -377,7 +414,6 @@ i.material-icons.close-icon-btn:hover {
     cubic-bezier(0.22, 1, 0.36, 1)
     forwards;
 }
-
 
 /* =========================================
    MOBILE MENU HEADER
@@ -416,7 +452,6 @@ i.material-icons.close-icon-btn:hover {
   font-weight: 950;
   letter-spacing: -0.04em;
 }
-
 
 /* =========================================
    MOBILE MENU CLOSE BUTTON
@@ -473,7 +508,6 @@ i.material-icons.close-icon-btn:hover {
     scale(0.95);
 }
 
-
 /* =========================================
    MOBILE WEATHER NAVIGATION
    ========================================== */
@@ -529,7 +563,6 @@ i.material-icons.close-icon-btn:hover {
     rgba(230, 126, 34, 0.50);
 }
 
-
 /* =========================================
    NAV NUMBER
    ========================================== */
@@ -545,7 +578,6 @@ i.material-icons.close-icon-btn:hover {
   color: #f59e0b;
 }
 
-
 /* =========================================
    NAV LABEL
    ========================================== */
@@ -557,7 +589,6 @@ i.material-icons.close-icon-btn:hover {
   letter-spacing: 0.08em;
   white-space: nowrap;
 }
-
 
 /* =========================================
    NAV ARROW
@@ -581,7 +612,6 @@ i.material-icons.close-icon-btn:hover {
     translateX(4px);
 }
 
-
 /* =========================================
    MOBILE MENU FOOTER
    ========================================== */
@@ -600,7 +630,6 @@ i.material-icons.close-icon-btn:hover {
   font-weight: 900;
   letter-spacing: 0.16em;
 }
-
 
 /* =========================================
    MOBILE MENU STATUS
@@ -630,12 +659,27 @@ i.material-icons.close-icon-btn:hover {
     infinite;
 }
 
-
 /* =========================================
    MEDIA QUERIES
    ========================================== */
 
 @media (max-width: 768px) {
+  .weather-brand {
+    display: none;
+  }
+
+  .mobile-weather-brand {
+    display: flex;
+  }
+
+  .mobile-weather-brand .weather-brand {
+    position: relative;
+    top: auto;
+    left: auto;
+    display: flex;
+    z-index: auto;
+  }
+
   .hamburger-btn-outside {
     display: flex;
   }
@@ -657,7 +701,6 @@ i.material-icons.close-icon-btn:hover {
     padding: 17px 15px;
   }
 }
-
 
 /* =========================================
    SMALL MOBILE
@@ -708,8 +751,16 @@ i.material-icons.close-icon-btn:hover {
   .mobile-menu-status {
     font-size: 0.55rem;
   }
-}
 
+  .weather-brand-text {
+    font-size: 1.35rem;
+  }
+
+  .weather-brand-art {
+    width: 38px;
+    height: 38px;
+  }
+}
 
 /* =========================================
    ANIMATIONS

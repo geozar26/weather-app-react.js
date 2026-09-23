@@ -4,6 +4,25 @@ import DetailTile from "./components/DetailTile";
 import WeatherForecast from "./components/WeatherForecast";
 import "./app.css";
 
+function WeatherBrand() {
+  return (
+    <div className="weather-brand">
+      <div className="weather-brand-main">
+        <img
+          className="weather-brand-art"
+          src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f326.svg"
+          alt=""
+          aria-hidden="true"
+        />
+
+        <span className="weather-brand-text">
+          FORECAST
+        </span>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
@@ -20,7 +39,11 @@ function App() {
 
   const formatText = (text) => {
     if (!text) return "";
-    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+
+    return text
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toUpperCase();
   };
 
   const getLocalTime = (offset) => {
@@ -45,19 +68,27 @@ function App() {
 
   useEffect(() => {
     const saved = localStorage.getItem("weatherHistory");
+
     setHistory(saved ? JSON.parse(saved) : []);
 
     getWeather(DEFAULT_CITY, true);
 
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target)
+      ) {
         setShowHistory(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
 
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      );
   }, []);
 
   useEffect(() => {
@@ -71,10 +102,16 @@ function App() {
   }, [weather]);
 
   useEffect(() => {
-    localStorage.setItem("weatherHistory", JSON.stringify(history));
+    localStorage.setItem(
+      "weatherHistory",
+      JSON.stringify(history)
+    );
   }, [history]);
 
-  const getWeather = async (cityName, isInitial = false) => {
+  const getWeather = async (
+    cityName,
+    isInitial = false
+  ) => {
     if (!cityName) return;
 
     setError("");
@@ -104,11 +141,16 @@ function App() {
       const fData = await fRes.json();
 
       setWeather(data);
-      setLocalTime(getLocalTime(data.timezone));
+
+      setLocalTime(
+        getLocalTime(data.timezone)
+      );
 
       setForecast(
         fData.list
-          .filter((item) => item.dt_txt.includes("12:00:00"))
+          .filter((item) =>
+            item.dt_txt.includes("12:00:00")
+          )
           .slice(0, 5)
       );
 
@@ -117,7 +159,9 @@ function App() {
           [
             searchName,
             ...prev.filter(
-              (c) => c.toLowerCase() !== searchName.toLowerCase()
+              (c) =>
+                c.toLowerCase() !==
+                searchName.toLowerCase()
             ),
           ].slice(0, 10)
         );
@@ -139,7 +183,10 @@ function App() {
     if (!weather) return 0;
 
     const d = new Date();
-    const utc = d.getTime() + d.getTimezoneOffset() * 60000;
+
+    const utc =
+      d.getTime() +
+      d.getTimezoneOffset() * 60000;
 
     return Math.floor(
       (utc + weather.timezone * 1000) / 1000
@@ -157,20 +204,26 @@ function App() {
     switch (main) {
       case "Clear":
         return "linear-gradient(to bottom, #f39c12, #d35400)";
+
       case "Clouds":
         return "linear-gradient(to bottom, #757f9a, #2c3e50)";
+
       case "Rain":
       case "Drizzle":
         return "linear-gradient(to bottom, #4b6cb7, #182848)";
+
       case "Thunderstorm":
         return "linear-gradient(to bottom, #4834d4, #130f40)";
+
       case "Snow":
         return "linear-gradient(to bottom, #a1c4fd, #c2e9fb)";
+
       case "Mist":
       case "Smoke":
       case "Haze":
       case "Fog":
         return "linear-gradient(to bottom, #bdc3c7, #2c3e50)";
+
       default:
         return "linear-gradient(to bottom, #4c5c74, #2c3e50)";
     }
@@ -192,7 +245,7 @@ function App() {
         position: "relative",
       }}
     >
-    
+      <WeatherBrand />
 
       {/* MOBILE WEATHER MENU */}
       {showMenu && (
@@ -203,9 +256,16 @@ function App() {
           ></div>
 
           <aside className="mobile-weather-menu">
+            <div className="mobile-weather-brand">
+              <WeatherBrand />
+            </div>
+
             <div className="mobile-menu-header">
               <div>
-                <span className="mobile-menu-kicker">WEATHER</span>
+                <span className="mobile-menu-kicker">
+                  WEATHER
+                </span>
+
                 <h2>MENU</h2>
               </div>
 
@@ -223,27 +283,51 @@ function App() {
                 className="mobile-weather-nav-item active"
                 onClick={() => setShowMenu(false)}
               >
-                <span className="nav-number">01</span>
-                <span className="nav-label">ΤΡΕΧΩΝ ΚΑΙΡΟΣ</span>
-                <span className="nav-arrow">→</span>
+                <span className="nav-number">
+                  01
+                </span>
+
+                <span className="nav-label">
+                  ΤΡΕΧΩΝ ΚΑΙΡΟΣ
+                </span>
+
+                <span className="nav-arrow">
+                  →
+                </span>
               </button>
 
               <button
                 className="mobile-weather-nav-item"
                 onClick={() => setShowMenu(false)}
               >
-                <span className="nav-number">02</span>
-                <span className="nav-label">ΠΡΟΓΝΩΣΗ</span>
-                <span className="nav-arrow">→</span>
+                <span className="nav-number">
+                  02
+                </span>
+
+                <span className="nav-label">
+                  ΠΡΟΓΝΩΣΗ
+                </span>
+
+                <span className="nav-arrow">
+                  →
+                </span>
               </button>
 
               <button
                 className="mobile-weather-nav-item"
                 onClick={() => setShowMenu(false)}
               >
-                <span className="nav-number">03</span>
-                <span className="nav-label">WEATHER MAP</span>
-                <span className="nav-arrow">→</span>
+                <span className="nav-number">
+                  03
+                </span>
+
+                <span className="nav-label">
+                  WEATHER MAP
+                </span>
+
+                <span className="nav-arrow">
+                  →
+                </span>
               </button>
 
               <button
@@ -253,27 +337,47 @@ function App() {
                   setShowHistory(true);
                 }}
               >
-                <span className="nav-number">04</span>
-                <span className="nav-label">ΙΣΤΟΡΙΚΟ</span>
-                <span className="nav-arrow">→</span>
+                <span className="nav-number">
+                  04
+                </span>
+
+                <span className="nav-label">
+                  ΙΣΤΟΡΙΚΟ
+                </span>
+
+                <span className="nav-arrow">
+                  →
+                </span>
               </button>
 
               <button
                 className="mobile-weather-nav-item"
                 onClick={() => setShowMenu(false)}
               >
-                <span className="nav-number">05</span>
-                <span className="nav-label">ΑΓΑΠΗΜΕΝΑ</span>
-                <span className="nav-arrow">→</span>
+                <span className="nav-number">
+                  05
+                </span>
+
+                <span className="nav-label">
+                  ΑΓΑΠΗΜΕΝΑ
+                </span>
+
+                <span className="nav-arrow">
+                  →
+                </span>
               </button>
             </nav>
 
             <div className="mobile-menu-footer">
-              <span>LIVE WEATHER</span>
+              <span>
+                LIVE WEATHER
+              </span>
 
               <div className="mobile-menu-status">
                 <span className="status-dot"></span>
-                <span>ONLINE</span>
+                <span>
+                  ONLINE
+                </span>
               </div>
             </div>
           </aside>
@@ -307,10 +411,12 @@ function App() {
               style={{
                 fontWeight: 900,
                 fontSize: "0.9rem",
-                textShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                textShadow:
+                  "0 2px 4px rgba(0,0,0,0.2)",
               }}
             >
-              {localTime.date} {localTime.time}
+              {localTime.date}{" "}
+              {localTime.time}
             </div>
           </div>
 
@@ -328,20 +434,27 @@ function App() {
                 style={{
                   fontSize: "4.5rem",
                   fontWeight: 900,
-                  textShadow: "0 2px 10px rgba(0,0,0,0.2)",
+                  textShadow:
+                    "0 2px 10px rgba(0,0,0,0.2)",
                 }}
               >
-                {Math.round(weather.main.temp)}°
+                {Math.round(
+                  weather.main.temp
+                )}
+                °
               </span>
 
               <span
                 style={{
                   fontSize: "2.2rem",
                   fontWeight: 950,
-                  textShadow: "0 2px 5px rgba(0,0,0,0.2)",
+                  textShadow:
+                    "0 2px 5px rgba(0,0,0,0.2)",
                 }}
               >
-                {formatText(weather.name)}
+                {formatText(
+                  weather.name
+                )}
               </span>
             </div>
 
@@ -354,7 +467,9 @@ function App() {
               }}
             >
               <MainWeatherIcon
-                iconType={weather.weather[0].main}
+                iconType={
+                  weather.weather[0].main
+                }
                 isNight={isNight}
               />
 
@@ -362,10 +477,13 @@ function App() {
                 style={{
                   fontSize: "1.2rem",
                   fontWeight: 900,
-                  textShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                  textShadow:
+                    "0 2px 4px rgba(0,0,0,0.2)",
                 }}
               >
-                {formatText(weather.weather[0].description)}
+                {formatText(
+                  weather.weather[0].description
+                )}
               </div>
             </div>
           </div>
@@ -381,9 +499,13 @@ function App() {
                   className="search-input"
                   placeholder="ΑΝΑΖΗΤΗΣΗ..."
                   value={city}
-                  onFocus={() => setShowHistory(true)}
+                  onFocus={() =>
+                    setShowHistory(true)
+                  }
                   onChange={(e) => {
-                    const val = e.target.value;
+                    const val =
+                      e.target.value;
+
                     setCity(val);
 
                     if (val === "") {
@@ -391,7 +513,8 @@ function App() {
                     }
                   }}
                   onKeyDown={(e) =>
-                    e.key === "Enter" && getWeather(city)
+                    e.key === "Enter" &&
+                    getWeather(city)
                   }
                 />
 
@@ -409,7 +532,9 @@ function App() {
 
                 <button
                   className="search-btn"
-                  onClick={() => getWeather(city)}
+                  onClick={() =>
+                    getWeather(city)
+                  }
                 >
                   ΑΝΑΖΗΤΗΣΗ
                 </button>
@@ -423,7 +548,8 @@ function App() {
                   fontWeight: "900",
                   fontSize: "0.85rem",
                   marginTop: "10px",
-                  textShadow: "0 1px 3px rgba(0,0,0,0.3)",
+                  textShadow:
+                    "0 1px 3px rgba(0,0,0,0.3)",
                 }}
               >
                 {error}
@@ -433,39 +559,50 @@ function App() {
             {showHistory && (
               <div className="history-dropdown">
                 {filteredHistory.length > 0 ? (
-                  filteredHistory.map((h, i) => (
-                    <div
-                      key={i}
-                      className="history-item"
-                      onClick={() => getWeather(h)}
-                    >
-                      <span>{h}</span>
-
-                      <span
-                        className="material-icons close-icon-btn"
-                        style={{
-                          fontSize: "18px",
-                          marginRight: 0,
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-
-                          setHistory((prev) =>
-                            prev.filter((c) => c !== h)
-                          );
-                        }}
+                  filteredHistory.map(
+                    (h, i) => (
+                      <div
+                        key={i}
+                        className="history-item"
+                        onClick={() =>
+                          getWeather(h)
+                        }
                       >
-                        close
-                      </span>
-                    </div>
-                  ))
+                        <span>
+                          {h}
+                        </span>
+
+                        <span
+                          className="material-icons close-icon-btn"
+                          style={{
+                            fontSize: "18px",
+                            marginRight: 0,
+                          }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+
+                            setHistory(
+                              (prev) =>
+                                prev.filter(
+                                  (c) => c !== h
+                                )
+                            );
+                          }}
+                        >
+                          close
+                        </span>
+                      </div>
+                    )
+                  )
                 ) : (
                   <div
                     style={{
-                      padding: "15px 18px",
+                      padding:
+                        "15px 18px",
                       color: "#999",
                       fontWeight: 800,
-                      fontSize: "0.85rem",
+                      fontSize:
+                        "0.85rem",
                     }}
                   >
                     ΑΔΕΙΟ ΙΣΤΟΡΙΚΟ
@@ -480,10 +617,15 @@ function App() {
                 className="back-btn"
                 onClick={() => {
                   setError("");
-                  getWeather(DEFAULT_CITY, true);
+
+                  getWeather(
+                    DEFAULT_CITY,
+                    true
+                  );
                 }}
               >
-                <span>←</span> ΕΠΙΣΤΡΟΦΗ
+                <span>←</span>{" "}
+                ΕΠΙΣΤΡΟΦΗ
               </button>
             )}
           </div>
@@ -498,7 +640,9 @@ function App() {
           <div className="detail-grid">
             <DetailTile
               label="ΑΙΣΘΗΤΗ"
-              val={`${Math.round(weather.main.feels_like)}°`}
+              val={`${Math.round(
+                weather.main.feels_like
+              )}°`}
               icon="thermostat"
               col="#FFD700"
             />
@@ -512,7 +656,9 @@ function App() {
 
             <DetailTile
               label="ΑΝΕΜΟΣ"
-              val={`${Math.round(weather.wind.speed)}m/s`}
+              val={`${Math.round(
+                weather.wind.speed
+              )}m/s`}
               icon="air"
               col="#69db7c"
             />
@@ -520,14 +666,18 @@ function App() {
             <DetailTile
               label="ΑΝΑΤΟΛΗ"
               val={new Date(
-                (weather.sys.sunrise +
+                (
+                  weather.sys.sunrise +
                   weather.timezone -
-                  7200) *
-                  1000
-              ).toLocaleTimeString("el-GR", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+                  7200
+                ) * 1000
+              ).toLocaleTimeString(
+                "el-GR",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }
+              )}
               icon="wb_sunny"
               col="#ffd43b"
             />
@@ -535,14 +685,18 @@ function App() {
             <DetailTile
               label="ΔΥΣΗ"
               val={new Date(
-                (weather.sys.sunset +
+                (
+                  weather.sys.sunset +
                   weather.timezone -
-                  7200) *
-                  1000
-              ).toLocaleTimeString("el-GR", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+                  7200
+                ) * 1000
+              ).toLocaleTimeString(
+                "el-GR",
+                {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }
+              )}
               icon="wb_twilight"
               col="#FF3D00"
             />
