@@ -32,10 +32,20 @@ function App() {
   const [history, setHistory] = useState([]);
   const [localTime, setLocalTime] = useState("");
   const [showMenu, setShowMenu] = useState(false);
+  const [currentTimestamp, setCurrentTimestamp] = useState(
+    Math.floor(Date.now() / 1000)
+  );
+
   const dropdownRef = useRef(null);
 
   const API_KEY = "8e870e1f59cadca07199db1d225e0dec";
   const DEFAULT_CITY = "Πάτρα";
+
+  const DAY_BACKGROUND =
+    "linear-gradient(to bottom, #f39c12, #d35400)";
+
+  const NIGHT_BACKGROUND =
+    "linear-gradient(to bottom, #0b1220, #1e293b)";
 
   const formatText = (text) => {
     if (!text) return "";
@@ -48,8 +58,13 @@ function App() {
 
   const getLocalTime = (offset) => {
     const d = new Date();
-    const utc = d.getTime() + d.getTimezoneOffset() * 60000;
-    const nd = new Date(utc + 1000 * offset);
+    const utc =
+      d.getTime() +
+      d.getTimezoneOffset() * 60000;
+
+    const nd = new Date(
+      utc + 1000 * offset
+    );
 
     return {
       date: formatText(
@@ -66,23 +81,79 @@ function App() {
     };
   };
 
-  useEffect(() => {
-    const saved = localStorage.getItem("weatherHistory");
+  /*
+    Initial day/night state for the first render.
 
-    setHistory(saved ? JSON.parse(saved) : []);
+    This is only used before the weather data arrives,
+    so the application does not first show an unrelated
+    background and then immediately change it.
+  */
+  const getInitialIsNight = () => {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Europe/Athens",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).formatToParts(new Date());
+
+    let hour = Number(
+      parts.find(
+        (part) => part.type === "hour"
+      )?.value || 0
+    );
+
+    const minute = Number(
+      parts.find(
+        (part) => part.type === "minute"
+      )?.value || 0
+    );
+
+    if (hour === 24) {
+      hour = 0;
+    }
+
+    const totalMinutes =
+      hour * 60 + minute;
+
+    return (
+      totalMinutes < 7 * 60 ||
+      totalMinutes >= 19 * 60 + 30
+    );
+  };
+
+  const getBackground = (night) => {
+    return night
+      ? NIGHT_BACKGROUND
+      : DAY_BACKGROUND;
+  };
+
+  useEffect(() => {
+    const saved =
+      localStorage.getItem(
+        "weatherHistory"
+      );
+
+    setHistory(
+      saved ? JSON.parse(saved) : []
+    );
 
     getWeather(DEFAULT_CITY, true);
 
     const handleClickOutside = (event) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target)
+        !dropdownRef.current.contains(
+          event.target
+        )
       ) {
         setShowHistory(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener(
+      "mousedown",
+      handleClickOutside
+    );
 
     return () =>
       document.removeEventListener(
@@ -92,13 +163,27 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTimestamp(
+        Math.floor(Date.now() / 1000)
+      );
+    }, 1000);
+
+    return () =>
+      clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
     if (!weather) return;
 
     const timer = setInterval(() => {
-      setLocalTime(getLocalTime(weather.timezone));
+      setLocalTime(
+        getLocalTime(weather.timezone)
+      );
     }, 1000);
 
-    return () => clearInterval(timer);
+    return () =>
+      clearInterval(timer);
   }, [weather]);
 
   useEffect(() => {
@@ -117,7 +202,8 @@ function App() {
     setError("");
     setShowHistory(false);
 
-    const searchName = cityName.trim();
+    const searchName =
+      cityName.trim();
 
     try {
       const res = await fetch(
@@ -133,7 +219,9 @@ function App() {
       );
 
       if (!res.ok || !fRes.ok) {
-        setError("Η ΠΕΡΙΟΧΗ ΔΕΝ ΒΡΕΘΗΚΕ");
+        setError(
+          "Η ΠΕΡΙΟΧΗ ΔΕΝ ΒΡΕΘΗΚΕ"
+        );
         return;
       }
 
@@ -149,85 +237,53 @@ function App() {
       setForecast(
         fData.list
           .filter((item) =>
-            item.dt_txt.includes("12:00:00")
+            item.dt_txt.includes(
+              "12:00:00"
+            )
           )
           .slice(0, 5)
       );
 
       if (!isInitial) {
-        setHistory((prev) =>
-          [
-            searchName,
-            ...prev.filter(
-              (c) =>
-                c.toLowerCase() !==
-                searchName.toLowerCase()
-            ),
-          ].slice(0, 10)
-        );
+        setHistory((prev) => [
+          searchName,
+          ...prev.filter(
+            (c) =>
+              c.toLowerCase() !==
+              searchName.toLowerCase()
+          ),
+        ].slice(0, 10));
       }
 
       setCity("");
     } catch (err) {
-      setError("ΠΡΟΒΛΗΜΑ ΣΥΝΔΕΣΗΣ");
+      setError(
+        "ΠΡΟΒΛΗΜΑ ΣΥΝΔΕΣΗΣ"
+      );
     }
   };
 
   const filteredHistory = city
     ? history.filter((h) =>
-        h.toLowerCase().startsWith(city.toLowerCase())
+        h
+          .toLowerCase()
+          .startsWith(
+            city.toLowerCase()
+          )
       )
     : history;
 
-  const getLocalTimestamp = () => {
-    if (!weather) return 0;
-
-    const d = new Date();
-
-    const utc =
-      d.getTime() +
-      d.getTimezoneOffset() * 60000;
-
-    return Math.floor(
-      (utc + weather.timezone * 1000) / 1000
-    );
-  };
-
-  const currentLocalTime = getLocalTimestamp();
-
+  /*
+    OpenWeather gives sunrise/sunset as UTC timestamps.
+    Therefore the current UTC timestamp can be compared
+    directly with them.
+  */
   const isNight = weather
-    ? currentLocalTime < weather.sys.sunrise ||
-      currentLocalTime > weather.sys.sunset
-    : false;
-
-  const getBg = (main) => {
-    switch (main) {
-      case "Clear":
-        return "linear-gradient(to bottom, #f39c12, #d35400)";
-
-      case "Clouds":
-        return "linear-gradient(to bottom, #757f9a, #2c3e50)";
-
-      case "Rain":
-      case "Drizzle":
-        return "linear-gradient(to bottom, #4b6cb7, #182848)";
-
-      case "Thunderstorm":
-        return "linear-gradient(to bottom, #4834d4, #130f40)";
-
-      case "Snow":
-        return "linear-gradient(to bottom, #a1c4fd, #c2e9fb)";
-
-      case "Mist":
-      case "Smoke":
-      case "Haze":
-      case "Fog":
-        return "linear-gradient(to bottom, #bdc3c7, #2c3e50)";
-
-      default:
-        return "linear-gradient(to bottom, #4c5c74, #2c3e50)";
-    }
-  };
+    ? currentTimestamp <
+        weather.sys.sunrise ||
+      currentTimestamp >
+        weather.sys.sunset
+    : getInitialIsNight();
 
   return (
     <div
@@ -238,10 +294,10 @@ function App() {
         alignItems: "center",
         justifyContent: "center",
         color: "white",
-        background: weather
-          ? getBg(weather.weather[0].main)
-          : "#2c3e50",
-        transition: "background 0.8s ease",
+        background:
+          getBackground(isNight),
+        transition:
+          "background 0.8s ease",
         position: "relative",
       }}
     >
@@ -252,7 +308,9 @@ function App() {
         <>
           <div
             className="mobile-menu-backdrop"
-            onClick={() => setShowMenu(false)}
+            onClick={() =>
+              setShowMenu(false)
+            }
           ></div>
 
           <aside className="mobile-weather-menu">
@@ -271,7 +329,9 @@ function App() {
 
               <button
                 className="mobile-menu-close"
-                onClick={() => setShowMenu(false)}
+                onClick={() =>
+                  setShowMenu(false)
+                }
                 aria-label="Κλείσιμο menu"
               >
                 ×
@@ -281,7 +341,9 @@ function App() {
             <nav className="mobile-weather-nav">
               <button
                 className="mobile-weather-nav-item active"
-                onClick={() => setShowMenu(false)}
+                onClick={() =>
+                  setShowMenu(false)
+                }
               >
                 <span className="nav-number">
                   01
@@ -298,7 +360,9 @@ function App() {
 
               <button
                 className="mobile-weather-nav-item"
-                onClick={() => setShowMenu(false)}
+                onClick={() =>
+                  setShowMenu(false)
+                }
               >
                 <span className="nav-number">
                   02
@@ -315,7 +379,9 @@ function App() {
 
               <button
                 className="mobile-weather-nav-item"
-                onClick={() => setShowMenu(false)}
+                onClick={() =>
+                  setShowMenu(false)
+                }
               >
                 <span className="nav-number">
                   03
@@ -352,7 +418,9 @@ function App() {
 
               <button
                 className="mobile-weather-nav-item"
-                onClick={() => setShowMenu(false)}
+                onClick={() =>
+                  setShowMenu(false)
+                }
               >
                 <span className="nav-number">
                   05
@@ -375,6 +443,7 @@ function App() {
 
               <div className="mobile-menu-status">
                 <span className="status-dot"></span>
+
                 <span>
                   ONLINE
                 </span>
@@ -401,7 +470,9 @@ function App() {
             <button
               type="button"
               className="hamburger-btn-outside"
-              onClick={() => setShowMenu(true)}
+              onClick={() =>
+                setShowMenu(true)
+              }
               aria-label="Άνοιγμα weather menu"
             >
               ☰
@@ -482,7 +553,8 @@ function App() {
                 }}
               >
                 {formatText(
-                  weather.weather[0].description
+                  weather.weather[0]
+                    .description
                 )}
               </div>
             </div>
@@ -558,7 +630,8 @@ function App() {
 
             {showHistory && (
               <div className="history-dropdown">
-                {filteredHistory.length > 0 ? (
+                {filteredHistory.length >
+                0 ? (
                   filteredHistory.map(
                     (h, i) => (
                       <div
@@ -575,7 +648,8 @@ function App() {
                         <span
                           className="material-icons close-icon-btn"
                           style={{
-                            fontSize: "18px",
+                            fontSize:
+                              "18px",
                             marginRight: 0,
                           }}
                           onClick={(e) => {
@@ -584,7 +658,8 @@ function App() {
                             setHistory(
                               (prev) =>
                                 prev.filter(
-                                  (c) => c !== h
+                                  (c) =>
+                                    c !== h
                                 )
                             );
                           }}
@@ -611,8 +686,12 @@ function App() {
               </div>
             )}
 
-            {formatText(weather.name) !==
-              formatText(DEFAULT_CITY) && (
+            {formatText(
+              weather.name
+            ) !==
+              formatText(
+                DEFAULT_CITY
+              ) && (
               <button
                 className="back-btn"
                 onClick={() => {
