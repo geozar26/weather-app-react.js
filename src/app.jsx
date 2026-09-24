@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import MainWeatherIcon from "./components/MainWeatherIcon";
 import DetailTile from "./components/DetailTile";
@@ -58,6 +59,7 @@ function App() {
 
   const getLocalTime = (offset) => {
     const d = new Date();
+
     const utc =
       d.getTime() +
       d.getTimezoneOffset() * 60000;
@@ -81,20 +83,16 @@ function App() {
     };
   };
 
-  /*
-    Initial day/night state for the first render.
-
-    This is only used before the weather data arrives,
-    so the application does not first show an unrelated
-    background and then immediately change it.
-  */
   const getInitialIsNight = () => {
-    const parts = new Intl.DateTimeFormat("en-US", {
-      timeZone: "Europe/Athens",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    }).formatToParts(new Date());
+    const parts = new Intl.DateTimeFormat(
+      "en-US",
+      {
+        timeZone: "Europe/Athens",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }
+    ).formatToParts(new Date());
 
     let hour = Number(
       parts.find(
@@ -137,9 +135,14 @@ function App() {
       saved ? JSON.parse(saved) : []
     );
 
-    getWeather(DEFAULT_CITY, true);
+    getWeather(
+      DEFAULT_CITY,
+      true
+    );
 
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (
+      event
+    ) => {
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(
@@ -165,7 +168,9 @@ function App() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTimestamp(
-        Math.floor(Date.now() / 1000)
+        Math.floor(
+          Date.now() / 1000
+        )
       );
     }, 1000);
 
@@ -178,7 +183,9 @@ function App() {
 
     const timer = setInterval(() => {
       setLocalTime(
-        getLocalTime(weather.timezone)
+        getLocalTime(
+          weather.timezone
+        )
       );
     }, 1000);
 
@@ -225,13 +232,18 @@ function App() {
         return;
       }
 
-      const data = await res.json();
-      const fData = await fRes.json();
+      const data =
+        await res.json();
+
+      const fData =
+        await fRes.json();
 
       setWeather(data);
 
       setLocalTime(
-        getLocalTime(data.timezone)
+        getLocalTime(
+          data.timezone
+        )
       );
 
       setForecast(
@@ -245,14 +257,16 @@ function App() {
       );
 
       if (!isInitial) {
-        setHistory((prev) => [
-          searchName,
-          ...prev.filter(
-            (c) =>
-              c.toLowerCase() !==
-              searchName.toLowerCase()
-          ),
-        ].slice(0, 10));
+        setHistory((prev) =>
+          [
+            searchName,
+            ...prev.filter(
+              (c) =>
+                c.toLowerCase() !==
+                searchName.toLowerCase()
+            ),
+          ].slice(0, 10)
+        );
       }
 
       setCity("");
@@ -273,11 +287,6 @@ function App() {
       )
     : history;
 
-  /*
-    OpenWeather gives sunrise/sunset as UTC timestamps.
-    Therefore the current UTC timestamp can be compared
-    directly with them.
-  */
   const isNight = weather
     ? currentTimestamp <
         weather.sys.sunrise ||
@@ -481,9 +490,11 @@ function App() {
             <div
               style={{
                 fontWeight: 900,
-                fontSize: "0.9rem",
+                fontSize: "1rem",
                 textShadow:
                   "0 2px 4px rgba(0,0,0,0.2)",
+                transform:
+                  "translateY(5px)",
               }}
             >
               {localTime.date}{" "}
@@ -585,7 +596,8 @@ function App() {
                     }
                   }}
                   onKeyDown={(e) =>
-                    e.key === "Enter" &&
+                    e.key ===
+                      "Enter" &&
                     getWeather(city)
                   }
                 />
@@ -794,3 +806,4 @@ function App() {
 }
 
 export default App;
+
